@@ -927,7 +927,7 @@ pub fn app() -> Html {
             <footer class="app-footer">
                 <div class="footer-left">
                     <span>{"MIT License"}</span>
-                    <span>{"© 2026 sw-comp-history"}</span>
+                    <span>{"© 2026 Michael A Wright"}</span>
                 </div>
                 <div class="footer-right">
                     <span>{format!("{} | {} | {}", env!("VERGEN_BUILD_HOST"), env!("VERGEN_GIT_SHA_SHORT"), env!("VERGEN_BUILD_TIMESTAMP"))}</span>
