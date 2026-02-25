@@ -88,6 +88,16 @@
 
 ## Changelog
 
+### 0.1.1 (2026-02-25)
+
+**UI Improvements**
+
+- Added GitHub corner ribbon linking to repository
+- Added footer with license, copyright, and build info
+- Added computer emoji favicon
+- Fixed Reset button to properly clear assembly output and memory
+- Added IBM 1130 references section to README
+
 ### 0.1.0 (2026-02-25)
 
 **Initial Release**
