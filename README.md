@@ -6,7 +6,7 @@ An interactive browser-based educational game for learning the IBM 1130 instruct
 
 **[Try it online](https://sw-comp-history.github.io/ibm-1130-rs/)**
 
-![IBM 1130 Emulator Screenshot](images/screenshot.png?ts=1772042347000)
+![IBM 1130 Emulator Screenshot](images/screenshot.png?ts=1772042916000)
 
 ## Features
 
