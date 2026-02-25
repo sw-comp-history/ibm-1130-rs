@@ -192,11 +192,15 @@ pub fn app() -> Html {
     let on_reset = {
         let cpu = cpu.clone();
         let error_message = error_message.clone();
+        let assembly_lines = assembly_lines.clone();
+        let changed_memory = changed_memory.clone();
         Callback::from(move |_| {
             let mut cpu_mut = (*cpu).clone();
-            cpu_mut.reset();
+            cpu_mut.hard_reset();
             cpu.set(cpu_mut);
             error_message.set(None);
+            assembly_lines.set(Vec::new());
+            changed_memory.set(Vec::new());
         })
     };
 
