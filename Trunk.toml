@@ -1,0 +1,15 @@
+[build]
+# Output directory for the build
+dist = "pages"
+# Use release mode for smaller WASM
+release = true
+
+[watch]
+# Files to watch for changes
+watch = ["src", "components", "index.html", "styles"]
+
+[serve]
+# Development server settings
+address = "127.0.0.1"
+port = 8080
+open = false

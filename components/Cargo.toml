@@ -1,0 +1,19 @@
+[package]
+name = "components"
+version = "0.1.0"
+edition = "2024"
+description = "Shared Yew components for assembly game UIs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+yew = { version = "0.21", features = ["csr"] }
+wasm-bindgen = "0.2"
+web-sys = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+gloo = "0.11"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
