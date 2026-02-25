@@ -1,4 +1,0 @@
-cargo:rustc-env=VERGEN_GIT_SHA_SHORT=bb6a663
-cargo:rustc-env=VERGEN_BUILD_TIMESTAMP=2026-02-25T18:10:58Z
-cargo:rustc-env=VERGEN_BUILD_HOST=manager
-cargo:rerun-if-changed=.git/HEAD
