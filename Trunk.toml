@@ -3,6 +3,8 @@
 dist = "pages"
 # Use release mode for smaller WASM
 release = true
+# Public URL prefix for GitHub Pages subdirectory
+public_url = "/ibm-1130-rs/"
 
 [watch]
 # Files to watch for changes
