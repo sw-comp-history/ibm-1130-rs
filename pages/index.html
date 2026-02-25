@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM 1130 Assembly Game</title>
+    
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="/ibm-1130-rs/asm-game-1ace3a9bd74b542d.css" integrity="sha384-7K0aCBnj58qA1IGzUhr1rCvMkq4rali4/zCyGwNMq+P14/f2y8Tmvd7jkfCVH2og"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/layout-a3d258acb3794e07.css" integrity="sha384-na7lNv6Q1u3NlikrzbKe29s+37vSVgbA6+DMmflqp6U4MXLH9FvesO51GJTQdFCD"/>
+    
+<script type="module">
+import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-19baf301e27c39bc.js';
+const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-19baf301e27c39bc_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-19baf301e27c39bc.js" crossorigin="anonymous" integrity="sha384-CZRxtSK6jm/+DMtISXyUn4wtViiwbPQAsrHgtF+xZlK8pC/dmtZ7u4OslLTyQvmb"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-19baf301e27c39bc_bg.wasm" crossorigin="anonymous" integrity="sha384-q2UI35/8VCZ7PN22XxdN5GNJIMq3d4NTaAaqm/U2yaqvFBoi1QM44jLwoAY4Yrgs" as="fetch" type="application/wasm"></head>
+<body>
+    <!-- Yew will mount the app here -->
+</body>
+</html>
