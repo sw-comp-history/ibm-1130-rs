@@ -1,10 +1,20 @@
 //! IBM 1130 Assembly Game - Yew Application
 //!
 //! Main application component using Yew framework and shared components
+//! Integrated with tabbed interface for Keypunch, Printer, Assembler, and Console Panel
 
 use components::{
+    // Assembler game components
     Header, LegendItem, Modal, ProgramArea, Register, RegisterPanel, Sidebar, SidebarButton,
     WordMemoryViewer,
+    // Tab container
+    Tab, TabContainer, TabNav,
+    // Console panel components
+    ConsolePanel, Registers as ConsoleRegisters,
+    // Keypunch component
+    Keypunch, Deck,
+    // Printer component
+    Printer, sample_assembler_listing,
 };
 use yew::prelude::*;
 
@@ -50,6 +60,17 @@ pub fn app() -> Html {
     // Challenge state
     let current_challenge = use_state(|| None::<Challenge>);
     let challenge_result = use_state(|| None::<Result<String, String>>);
+
+    // Tab state
+    let active_tab = use_state(|| Tab::Assembler);
+
+    // Keypunch deck state
+    let keypunch_deck = use_state(Deck::default);
+
+    // Printer state - lines to print
+    let printer_content = use_state(|| sample_assembler_listing());
+
+    // Console panel state is managed internally by ConsolePanel component
 
     // Load challenges using use_memo to avoid recreating on every render
     let challenges = use_memo((), |_| get_all_challenges());
@@ -386,6 +407,59 @@ pub fn app() -> Html {
         })
     };
 
+    // Tab change callback
+    let on_tab_change = {
+        let active_tab = active_tab.clone();
+        Callback::from(move |tab: Tab| {
+            active_tab.set(tab);
+        })
+    };
+
+    // Keypunch: Load deck into assembler editor
+    let load_deck_to_editor = {
+        let keypunch_deck = keypunch_deck.clone();
+        let editor_code = editor_code.clone();
+        let active_tab = active_tab.clone();
+        Callback::from(move |_: MouseEvent| {
+            // Convert deck cards to assembly source
+            let code: String = keypunch_deck.cards.iter()
+                .map(|card| card.to_text().trim_end().to_string())
+                .collect::<Vec<_>>()
+                .join("\n");
+            editor_code.set(code);
+            active_tab.set(Tab::Assembler);
+        })
+    };
+
+    // Assembler: Send listing to printer
+    let send_to_printer = {
+        let assembly_lines = assembly_lines.clone();
+        let printer_content = printer_content.clone();
+        let active_tab = active_tab.clone();
+        Callback::from(move |_: MouseEvent| {
+            if !assembly_lines.is_empty() {
+                printer_content.set((*assembly_lines).clone());
+                active_tab.set(Tab::Printer);
+            }
+        })
+    };
+
+    // Build console registers from CPU state
+    let build_console_registers = |cpu_state: &Option<serde_json::Value>| -> ConsoleRegisters {
+        if let Some(state) = cpu_state {
+            ConsoleRegisters {
+                acc: state["acc"].as_u64().unwrap_or(0) as u16,
+                ext: state["ext"].as_u64().unwrap_or(0) as u16,
+                iar: state["iar"].as_u64().unwrap_or(0) as u16,
+                sar: 0, // SAR not exposed in current CPU model
+                sbr: 0, // SBR not exposed in current CPU model
+                afr: 0, // AFR not exposed in current CPU model
+            }
+        } else {
+            ConsoleRegisters::default()
+        }
+    };
+
     // Get CPU state for display
     let cpu_state = cpu
         .get_state()
@@ -583,12 +657,58 @@ pub fn app() -> Html {
         },
     ];
 
+    // === TAB CONTENTS ===
+
+    // Keypunch Tab Content
+    let keypunch_content_html = html! {
+        <div class="keypunch-tab">
+            <Keypunch />
+            <div class="keypunch-actions">
+                <button class="load-to-assembler-btn" onclick={load_deck_to_editor.clone()}>
+                    {"Load Deck → Assembler"}
+                </button>
+            </div>
+        </div>
+    };
+
+    // Printer Tab Content
+    let printer_content_html = html! {
+        <div class="printer-tab">
+            <Printer
+                content={(*printer_content).clone()}
+                auto_start={false}
+                sound_enabled={true}
+            />
+        </div>
+    };
+
+    // Console Panel Tab Content
+    let console_content_html = {
+        let console_registers = build_console_registers(&cpu_state);
+        html! {
+            <div class="console-tab">
+                <ConsolePanel external_registers={Some(console_registers)} />
+            </div>
+        }
+    };
+
     html! {
         <div class="container">
             <Header
-                title="IBM 1130 Assembly Game"
-                subtitle="Learn the IBM 1130 instruction set through interactive challenges"
-            />
+                title="IBM 1130 System Emulator"
+                subtitle="Keypunch, Printer, Assembler, and Console"
+            >
+                <TabNav active_tab={*active_tab} on_tab_change={on_tab_change.clone()} />
+            </Header>
+
+            <TabContainer
+                active_tab={*active_tab}
+                on_tab_change={on_tab_change}
+                keypunch_content={keypunch_content_html}
+                printer_content={printer_content_html}
+                console_content={console_content_html}
+                assembler_content={html! {
+                    <div class="assembler-tab">
 
             <Sidebar buttons={sidebar_buttons} />
 
@@ -651,6 +771,17 @@ pub fn app() -> Html {
                         words_to_show={4096}
                         changed_addresses={(*changed_memory).clone()}
                     />
+
+                    // Integration toolbar
+                    <div class="integration-toolbar">
+                        <button
+                            class="send-to-printer-btn"
+                            onclick={send_to_printer}
+                            disabled={assembly_lines.is_empty()}
+                        >
+                            {"Send Listing → Printer"}
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -917,6 +1048,10 @@ pub fn app() -> Html {
                 <p>{"This educational tool simulates a simplified IBM 1130 minicomputer."}</p>
                 <p>{"The IBM 1130 was introduced in 1965 and was widely used in scientific and educational institutions."}</p>
             </Modal>
+
+                    </div> // End assembler-tab
+                }}
+            />
 
             // GitHub Corner
             <a href="https://github.com/sw-comp-history/ibm-1130-rs" class="github-corner" aria-label="View source on GitHub" target="_blank" rel="noopener">

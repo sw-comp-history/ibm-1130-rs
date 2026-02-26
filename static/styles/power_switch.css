@@ -1,0 +1,30 @@
+/* Power Switch Component Styles */
+/* Ported from knob-lamps PowerSwitch */
+
+.power-switch-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.power-switch-svg {
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.power-switch-svg:hover {
+  filter: drop-shadow(0 0 6px rgba(100, 150, 255, 0.3));
+}
+
+.switch-slider {
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.switch-slider rect {
+  transition: y 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.switch-slider text {
+  transition: y 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}

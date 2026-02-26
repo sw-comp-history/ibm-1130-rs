@@ -16,19 +16,23 @@ body {
     height: 100vh;
 }
 
-/* Header Component */
+/* Header Component - with inline tabs */
 header {
     background: #16213e;
     padding: 5px 15px;
-    border-radius: 5px;
-    margin-bottom: 5px;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 0;
     flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 h1 {
     color: #00d9ff;
     font-size: 1.1em;
     margin: 0;
+    padding-bottom: 4px;
 }
 
 .subtitle {

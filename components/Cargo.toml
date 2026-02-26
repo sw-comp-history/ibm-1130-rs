@@ -10,10 +10,26 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 yew = { version = "0.21", features = ["csr"] }
 wasm-bindgen = "0.2"
-web-sys = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 gloo = "0.11"
+js-sys = "0.3"
+punch-card-core = { path = "../crates/punch-card-core" }
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+    "console",
+    "AudioContext",
+    "AudioBuffer",
+    "AudioBufferSourceNode",
+    "GainNode",
+    "AudioDestinationNode",
+    "MouseEvent",
+    "TouchEvent",
+    "HtmlElement",
+    "DomRect",
+]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
