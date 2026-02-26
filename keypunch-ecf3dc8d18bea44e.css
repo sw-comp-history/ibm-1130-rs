@@ -1,0 +1,247 @@
+/* Keypunch Component Styles */
+
+.keypunch {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+  border-radius: 12px;
+  outline: none;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.keypunch:focus {
+  box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.4);
+}
+
+.keypunch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.keypunch-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #e0e0f0;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+}
+
+.deck-info {
+  display: flex;
+  gap: 1.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.card-count,
+.column-info {
+  color: #48bb78;
+  font-weight: bold;
+}
+
+/* Text Input */
+.keypunch-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.keypunch-input label {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.keypunch-input input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  background: #1a1a2e;
+  border: 2px solid #3a3a5a;
+  border-radius: 6px;
+  color: #e0e0f0;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.keypunch-input input:focus {
+  border-color: #48bb78;
+}
+
+.keypunch-input input::placeholder {
+  color: #6a6a7a;
+}
+
+/* Punch Card Display */
+.punch-card-display {
+  background: #add8e6;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.punch-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+svg.punch-card {
+  max-width: 100%;
+  max-height: 280px;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Controls */
+.keypunch-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-buttons,
+.file-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.keypunch-controls button {
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  border: 2px solid #2c5282;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.keypunch-controls button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  box-shadow: 0 2px 8px rgba(49, 130, 206, 0.4);
+}
+
+.keypunch-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.download-link {
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #38a169 0%, #276749 100%);
+  border: 2px solid #276749;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.download-link:hover {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+}
+
+.file-input-label {
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+  border: 2px solid #6b46c1;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.file-input-label:hover {
+  background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+}
+
+.file-input-label input[type="file"] {
+  display: none;
+}
+
+/* Deck Preview */
+.deck-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.card-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #1a1a2e;
+  border: 2px solid #3a3a5a;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.card-preview.current {
+  border-color: #48bb78;
+  background: rgba(72, 187, 120, 0.1);
+}
+
+.preview-number {
+  font-weight: bold;
+  color: #48bb78;
+  min-width: 20px;
+}
+
+.preview-text {
+  color: #e0e0f0;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .keypunch-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .keypunch-controls {
+    flex-direction: column;
+  }
+
+  .nav-buttons,
+  .file-buttons {
+    justify-content: center;
+  }
+
+  .punch-card-display {
+    padding: 1rem;
+  }
+}

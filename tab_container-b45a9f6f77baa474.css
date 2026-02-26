@@ -1,0 +1,139 @@
+/* Tab Container Component Styles */
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+/* Tab Navigation - inline with header, centered */
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  flex-shrink: 0;
+  gap: 4px;
+  flex: 1;
+}
+
+.tab-button {
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: #2a2a3e;
+  border: 1px solid #444;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #8a8a9a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: #e0e0f0;
+  background: #3a3a4e;
+}
+
+.tab-button.active {
+  color: #48bb78;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-color: #48bb78;
+  z-index: 1;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+/* Tab Content */
+.tab-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Placeholder Styles */
+.tab-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  color: #8a8a9a;
+}
+
+.placeholder-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #e0e0f0;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 1rem;
+}
+
+.placeholder-description {
+  font-size: 1rem;
+  color: #6a6a7a;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.placeholder-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #48bb78;
+  padding: 1rem 2rem;
+  border: 2px dashed #48bb78;
+  border-radius: 8px;
+  opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tab-nav {
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    flex: 1 1 50%;
+    max-width: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+
+  .placeholder-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-button {
+    flex: 1 1 100%;
+    border-bottom: 1px solid #333;
+  }
+
+  .tab-button.active {
+    border-bottom-color: #48bb78;
+  }
+
+  .tab-button.active::after {
+    display: none;
+  }
+}

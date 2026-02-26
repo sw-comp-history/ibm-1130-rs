@@ -1,0 +1,46 @@
+/* Circular Knob Component Styles */
+/* Ported from knob-lamps CircularKnob */
+
+.circular-knob-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  flex: 1;
+}
+
+.knob-label {
+  fill: #b0b0b0;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  user-select: none;
+  transition: all 0.2s ease;
+  opacity: 0.8;
+}
+
+.knob-label.active {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.knob-label.hovered {
+  fill: #ffffff;
+  opacity: 1;
+  filter: brightness(1.3);
+}
+
+.knob-pointer {
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.knob-pointer.preview {
+  opacity: 0.6;
+}
+
+.clickable-area {
+  cursor: pointer;
+}
+
+.clickable-area:hover + .knob-label {
+  fill: #ffffff;
+}
