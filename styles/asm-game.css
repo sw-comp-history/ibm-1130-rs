@@ -110,29 +110,17 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* ProgramArea Component */
-.program-area {
-    background: #16213e;
-    border-radius: 5px;
-    padding: 10px;
+/* ProgramArea Component - now simplified for split layout */
+.program-area-inner {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
     overflow: hidden;
 }
 
-.controls {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    flex-shrink: 0;
-    padding: 8px;
-    background: #0f3460;
-    border-radius: 5px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-}
-
 #programEditor {
+    flex: 1;
     width: 100%;
     background: #0f3460;
     color: #0f0;
@@ -142,24 +130,24 @@ button:disabled {
     font-family: 'Monaco', monospace;
     font-size: 0.75em;
     resize: none;
-    flex: 1.2;
-    min-height: 150px;
+    min-height: 0;
 }
 
-#assemblyOutput {
+/* Empty state for output panel */
+.empty-state {
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Integration toolbar at bottom of output panel */
+.integration-toolbar {
+    padding: 6px;
     background: #0f3460;
-    padding: 8px;
     border-radius: 3px;
-    font-family: 'Monaco', monospace;
-    font-size: 0.75em;
-    flex: 1;
-    overflow-y: auto;
-    display: none;
-    min-height: 100px;
-}
-
-#assemblyOutput.visible {
-    display: block;
+    margin-top: 6px;
+    flex-shrink: 0;
 }
 
 .assembly-line {
@@ -177,12 +165,10 @@ button:disabled {
     padding-left: 8px;
 }
 
-/* RegisterPanel Component */
+/* RegisterPanel Component - compact in new layout */
 .registers-panel {
-    flex: 0.6;
     overflow: hidden;
-    background: #16213e;
-    border-radius: 5px;
+    background: transparent;
     padding: 4px;
     display: flex;
     flex-direction: column;
@@ -277,13 +263,12 @@ button:disabled {
     border-radius: 2px;
 }
 
-/* MemoryViewer Component */
+/* MemoryViewer Component - fills memory-section */
 .memory-panel {
-    flex: 2;
+    flex: 1;
     overflow: hidden;
-    background: #16213e;
-    border-radius: 5px;
-    padding: 6px;
+    background: transparent;
+    padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -646,10 +631,15 @@ table td {
     background: transparent;
 }
 
-/* Right Panels Container */
+/* Right Panels Container - no longer used, keeping for backwards compat */
 .right-panels {
     display: flex;
     flex-direction: column;
     gap: 8px;
     overflow: hidden;
+}
+
+/* Assembler tab container */
+.assembler-tab {
+    display: contents;
 }

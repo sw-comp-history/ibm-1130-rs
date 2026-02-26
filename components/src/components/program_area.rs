@@ -66,10 +66,8 @@ pub fn program_area(props: &ProgramAreaProps) -> Html {
     };
 
     html! {
-        <div class="program-area">
-            <div class="panel-title">{"Program Editor"}</div>
-
-            // Source editor (top half)
+        <div class="program-area-inner">
+            // Source editor (scrollable)
             <textarea
                 ref={editor_ref}
                 id="programEditor"
@@ -77,20 +75,13 @@ pub fn program_area(props: &ProgramAreaProps) -> Html {
                 value={(*code).clone()}
             />
 
-            // Controls (middle)
-            <div class="controls">
+            // Controls bar
+            <div class="controls-bar">
                 <button id="assembleBtn" onclick={on_assemble_click}>{"Assemble"}</button>
                 <button id="stepBtn" onclick={on_step_click} disabled={!props.step_enabled}>{"Step"}</button>
                 <button id="runBtn" onclick={on_run_click} disabled={!props.run_enabled}>{"Run"}</button>
                 <button id="resetBtn" onclick={on_reset_click}>{"Reset"}</button>
             </div>
-
-            // Assembly output (bottom half)
-            if let Some(output) = &props.assembly_output {
-                <div id="assemblyOutput" style="display: block;">
-                    {output.clone()}
-                </div>
-            }
         </div>
     }
 }

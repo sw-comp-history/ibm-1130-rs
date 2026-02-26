@@ -7,14 +7,123 @@
     height: 100%;
 }
 
-/* Main Content Grid - account for sidebar */
+/* Main Content Grid - two column layout with scrollable panels */
 .main-content {
     display: grid;
-    grid-template-columns: 0.75fr 1.25fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     flex: 1;
     overflow: hidden;
     margin-left: 160px; /* Space for fixed sidebar */
+    height: calc(100vh - 70px); /* Full height minus header and footer */
+}
+
+/* Left Column - Input (top) and Output (bottom) */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Right Column - Registers (top 25%) and Memory (bottom 75%) */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Input Panel - top half of left column */
+.input-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #16213e;
+    border-radius: 5px;
+    padding: 8px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.input-panel textarea {
+    flex: 1;
+    width: 100%;
+    background: #0f3460;
+    color: #0f0;
+    border: 1px solid #00d9ff;
+    border-radius: 3px;
+    padding: 8px;
+    font-family: 'Monaco', monospace;
+    font-size: 0.75em;
+    resize: none;
+    min-height: 0;
+}
+
+/* Output Panel - bottom half of left column */
+.output-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #16213e;
+    border-radius: 5px;
+    padding: 8px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.output-panel .assembly-output {
+    flex: 1;
+    overflow-y: auto;
+    background: #0f3460;
+    padding: 8px;
+    border-radius: 3px;
+    font-family: 'Monaco', monospace;
+    font-size: 0.75em;
+    min-height: 0;
+}
+
+/* Controls bar between input and output */
+.controls-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    padding: 6px 8px;
+    background: #0f3460;
+    border-radius: 5px;
+}
+
+/* Registers panel - compact, top of right column */
+.registers-section {
+    flex: 0 0 auto;
+    max-height: 25%;
+    display: flex;
+    flex-direction: column;
+    background: #16213e;
+    border-radius: 5px;
+    padding: 6px;
+    overflow: hidden;
+}
+
+/* Memory panel - takes remaining space in right column */
+.memory-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #16213e;
+    border-radius: 5px;
+    padding: 6px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.memory-section .memory-viewer {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 /* IBM 1130-specific flag styling */

@@ -1,0 +1,14 @@
+[package]
+name = "punch-card-core"
+version = "0.1.0"
+edition = "2024"
+description = "Core library for IBM punch card simulation with Hollerith encoding"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[lib]
+name = "punch_card_core"
+path = "src/lib.rs"

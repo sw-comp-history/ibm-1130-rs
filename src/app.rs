@@ -713,74 +713,81 @@ pub fn app() -> Html {
             <Sidebar buttons={sidebar_buttons} />
 
             <div class="main-content">
-                // Program Area
-                <ProgramArea
-                    initial_code={Some((*editor_code).clone())}
-                    assembly_output={if assembly_lines.is_empty() {
-                        None
-                    } else {
-                        let pc = cpu.get_iar();
-                        Some(html! {
-                            <div>
-                                {for assembly_lines.iter().map(|line| {
-                                    // Parse address from line (format: "0004: 0xC00A | LD 0 10")
-                                    let addr_str = line.split(':').next().unwrap_or("");
-                                    let is_current = if let Ok(addr) = u16::from_str_radix(addr_str, 10) {
-                                        addr == pc
-                                    } else {
-                                        false
-                                    };
+                // Left Column: Input + Controls + Output
+                <div class="left-column">
+                    // Input Panel (scrollable)
+                    <div class="input-panel">
+                        <div class="panel-title">{"Program Editor"}</div>
+                        <ProgramArea
+                            initial_code={Some((*editor_code).clone())}
+                            assembly_output={None}
+                            on_assemble={on_assemble}
+                            on_step={on_step}
+                            on_run={on_run}
+                            on_reset={on_reset}
+                            step_enabled={!cpu.is_halted() && !assembly_lines.is_empty()}
+                            run_enabled={!cpu.is_halted() && !assembly_lines.is_empty()}
+                        />
+                    </div>
 
-                                    let class = if is_current {
-                                        "assembly-line current"
-                                    } else {
-                                        "assembly-line"
-                                    };
+                    // Output Panel (scrollable)
+                    <div class="output-panel">
+                        <div class="panel-title">{"Assembly Output"}</div>
+                        <div class="assembly-output">
+                            {if assembly_lines.is_empty() {
+                                html! { <div class="empty-state">{"Click 'Assemble' to see output"}</div> }
+                            } else {
+                                let pc = cpu.get_iar();
+                                html! {
+                                    <div>
+                                        {for assembly_lines.iter().map(|line| {
+                                            let addr_str = line.split(':').next().unwrap_or("");
+                                            let is_current = if let Ok(addr) = u16::from_str_radix(addr_str, 10) {
+                                                addr == pc
+                                            } else {
+                                                false
+                                            };
+                                            let class = if is_current { "assembly-line current" } else { "assembly-line" };
+                                            html! { <div class={class}>{line}</div> }
+                                        })}
+                                    </div>
+                                }
+                            }}
+                        </div>
+                        <div class="integration-toolbar">
+                            <button
+                                class="send-to-printer-btn"
+                                onclick={send_to_printer}
+                                disabled={assembly_lines.is_empty()}
+                            >
+                                {"Send Listing → Printer"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                                    html! {
-                                        <div class={class}>{line}</div>
-                                    }
-                                })}
-                            </div>
-                        })
-                    }}
-                    on_assemble={on_assemble}
-                    on_step={on_step}
-                    on_run={on_run}
-                    on_reset={on_reset}
-                    step_enabled={!cpu.is_halted() && !assembly_lines.is_empty()}
-                    run_enabled={!cpu.is_halted() && !assembly_lines.is_empty()}
-                />
+                // Right Column: Registers + Memory
+                <div class="right-column">
+                    // Registers Section (compact, ~25%)
+                    <div class="registers-section">
+                        <RegisterPanel
+                            registers={registers}
+                            legend_items={legend_items}
+                        />
+                        {flags_html}
+                        {status_html}
+                    </div>
 
-                // Right Panels
-                <div class="right-panels">
-                    // Registers Panel
-                    <RegisterPanel
-                        registers={registers}
-                        legend_items={legend_items}
-                    />
-                    {flags_html}
-                    {status_html}
-
-                    // Memory Viewer - Display as 16-bit words with word addresses
-                    <WordMemoryViewer
-                        memory={memory_words}
-                        pc={pc}
-                        title={Some("Memory (4K Words)".to_string())}
-                        words_per_row={8}
-                        words_to_show={4096}
-                        changed_addresses={(*changed_memory).clone()}
-                    />
-
-                    // Integration toolbar
-                    <div class="integration-toolbar">
-                        <button
-                            class="send-to-printer-btn"
-                            onclick={send_to_printer}
-                            disabled={assembly_lines.is_empty()}
-                        >
-                            {"Send Listing → Printer"}
-                        </button>
+                    // Memory Section (scrollable, ~75%)
+                    <div class="memory-section">
+                        <WordMemoryViewer
+                            memory={memory_words}
+                            pc={pc}
+                            title={Some("Memory (4K Words)".to_string())}
+                            words_per_row={8}
+                            words_to_show={4096}
+                            changed_addresses={(*changed_memory).clone()}
+                        />
                     </div>
                 </div>
             </div>
