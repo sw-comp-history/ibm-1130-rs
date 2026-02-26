@@ -24,7 +24,7 @@ use crate::wasm::WasmCpu;
 #[function_component(App)]
 pub fn app() -> Html {
     // CPU state
-    let cpu = use_state(|| WasmCpu::new());
+    let cpu = use_state(WasmCpu::new);
 
     // Editor code
     let editor_code = use_state(|| {
@@ -34,7 +34,7 @@ pub fn app() -> Html {
     });
 
     // Assembly output (Vec<String> for line-by-line display with highlighting)
-    let assembly_lines = use_state(|| Vec::<String>::new());
+    let assembly_lines = use_state(Vec::<String>::new);
 
     // Register change tracking
     let last_acc = use_state(|| 0u16);
@@ -45,7 +45,7 @@ pub fn app() -> Html {
     let last_xr3 = use_state(|| 0u16);
 
     // Memory change tracking (for memory-mapped registers)
-    let changed_memory = use_state(|| Vec::<usize>::new());
+    let changed_memory = use_state(Vec::<usize>::new);
 
     // Error message
     let error_message = use_state(|| None::<String>);
@@ -68,7 +68,7 @@ pub fn app() -> Html {
     let keypunch_deck = use_state(Deck::default);
 
     // Printer state - lines to print
-    let printer_content = use_state(|| sample_assembler_listing());
+    let printer_content = use_state(sample_assembler_listing);
 
     // Console panel state is managed internally by ConsolePanel component
 
@@ -96,13 +96,12 @@ pub fn app() -> Html {
                 let trimmed = line.trim();
                 if trimmed.to_uppercase().starts_with("DATA") {
                     let parts: Vec<&str> = trimmed.split_whitespace().collect();
-                    if parts.len() >= 3 {
-                        if let (Ok(addr), Ok(value)) =
+                    if parts.len() >= 3
+                        && let (Ok(addr), Ok(value)) =
                             (parts[1].parse::<u16>(), parts[2].parse::<u16>())
                         {
                             let _ = cpu_mut.write_memory(addr, value);
                         }
-                    }
                 }
             }
 
@@ -328,14 +327,13 @@ pub fn app() -> Html {
             );
 
             // Add initial data if present
-            if !challenge.test_cases.is_empty() {
-                if !challenge.test_cases[0].initial_memory.is_empty() {
+            if !challenge.test_cases.is_empty()
+                && !challenge.test_cases[0].initial_memory.is_empty() {
                     code.push_str("; Initial data:\n");
                     for (addr, value) in &challenge.test_cases[0].initial_memory {
                         code.push_str(&format!("DATA 0x{:02X} {}\n", addr, value));
                     }
                 }
-            }
 
             editor_code.set(code);
             current_challenge.set(Some(challenge.clone()));
@@ -366,13 +364,12 @@ pub fn app() -> Html {
                             challenge_result.set(Some(Ok(message)));
 
                             // Save to localStorage
-                            if let Some(window) = web_sys::window() {
-                                if let Ok(Some(storage)) = window.local_storage() {
+                            if let Some(window) = web_sys::window()
+                                && let Ok(Some(storage)) = window.local_storage() {
                                     let key =
                                         format!("ibm1130_challenge_{}", validation.challenge_id);
                                     let _ = storage.set_item(&key, "completed");
                                 }
-                            }
                         } else {
                             let mut message = format!(
                                 "❌ Challenge {} did not pass.\n\n",
@@ -742,7 +739,7 @@ pub fn app() -> Html {
                                     <div>
                                         {for assembly_lines.iter().map(|line| {
                                             let addr_str = line.split(':').next().unwrap_or("");
-                                            let is_current = if let Ok(addr) = u16::from_str_radix(addr_str, 10) {
+                                            let is_current = if let Ok(addr) = addr_str.parse::<u16>() {
                                                 addr == pc
                                             } else {
                                                 false

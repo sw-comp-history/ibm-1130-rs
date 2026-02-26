@@ -1,15 +1,36 @@
-# IBM 1130 Assembly Emulator
+# IBM 1130 System Emulator
 
-An interactive browser-based educational game for learning the IBM 1130 instruction set architecture. The IBM 1130 was a 16-bit minicomputer introduced by IBM in 1965, widely used in scientific and educational institutions.
+An interactive browser-based educational platform for learning the IBM 1130 computer system. The IBM 1130 was a 16-bit minicomputer introduced by IBM in 1965, widely used in scientific and educational institutions.
 
 ## Live Demo
 
 **[Try it online](https://sw-comp-history.github.io/ibm-1130-rs/)**
 
-![IBM 1130 Emulator Screenshot](images/screenshot.png?ts=1772042916000)
+## Screenshots
+
+### Assembler Game
+Write and execute IBM 1130 assembly code with real-time register and memory visualization.
+
+![Assembler Game](images/assembler.png)
+
+### Console Panel
+Authentic IBM 1130 console with indicator lights, toggle switches, and speed control knob.
+
+![Console Panel](images/console.png)
+
+### IBM 029 Keypunch
+Punch cards with Hollerith encoding - type text and see the punch pattern.
+
+![Keypunch](images/keypunch.png)
+
+### Console Printer
+IBM 1131 console printer with typewriter-style output and greenbar paper.
+
+![Printer](images/printer.png)
 
 ## Features
 
+### Assembler Game
 - **Historical IBM 1130 CPU emulation** - 4K words of 16-bit memory
 - **Memory-mapped index registers** - XR1, XR2, XR3 at addresses 1, 2, 3
 - **Complete instruction set** - LD, STO, LDX, STX, A, S, AND, OR, SLA, SRA, BSC, BSI, WAIT
@@ -17,6 +38,25 @@ An interactive browser-based educational game for learning the IBM 1130 instruct
 - **Progressive challenges** with validation
 - **Assembly parser** with ORG directive support
 - **Real-time visualization** of CPU state, registers, and memory
+
+### Console Panel
+- **6 rows × 16 register indicator lights** - IAR, SAR, SBR, AFR, ACC, EXT
+- **8 status indicator lights** - DISK UNLOCK, FILE READY, RUN, PARITY CHECK, etc.
+- **16-bit toggle switches** for data entry
+- **7-position speed control knob** - SS, SMC, INT RUN, RUN, SI, DISP, LOAD
+- **Power switch and control buttons**
+- **Lamp test** for verifying all indicators
+
+### Keypunch
+- **IBM 029 Keypunch simulation**
+- **Hollerith punch card encoding**
+- **Visual punch pattern display**
+- **Multi-card deck management**
+
+### Printer
+- **IBM 1131 console printer simulation**
+- **Greenbar paper rendering**
+- **Typewriter-style character output**
 
 ## Documentation
 

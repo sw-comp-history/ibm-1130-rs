@@ -207,7 +207,7 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         })
     };
 
-    let on_deposit = {
+    let _on_deposit = {
         let state = state.clone();
         let callback = props.on_deposit.clone();
         Callback::from(move |_: MouseEvent| {
