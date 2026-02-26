@@ -1,0 +1,89 @@
+/* Toggle Switch Component Styles */
+/* Ported from toggle-nixie */
+
+.toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 15px;
+}
+
+.toggle-label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  font-family: 'Courier New', monospace;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.toggle-switch {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.toggle-track {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-track.off {
+  fill: #cbd5e0;
+  stroke: #a0aec0;
+  stroke-width: 2;
+}
+
+.toggle-track.on {
+  fill: #48bb78;
+  stroke: #38a169;
+  stroke-width: 2;
+}
+
+.toggle-clickable-area {
+  fill: transparent;
+  transition: fill 0.2s ease;
+}
+
+.toggle-clickable-area.hover {
+  fill: rgba(255, 255, 255, 0.2);
+  animation: pulse 0.6s ease-in-out infinite;
+}
+
+.toggle-knob {
+  fill: #ffffff;
+  stroke: #e2e8f0;
+  stroke-width: 2;
+  transition: cy 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease-out;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.toggle-knob.preview {
+  opacity: 0.8;
+}
+
+.toggle-knob-highlight {
+  fill: rgba(255, 255, 255, 0.8);
+  transition: cy 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease-out;
+  filter: blur(2px);
+}
+
+.toggle-knob-highlight.preview {
+  opacity: 0.8;
+}
+
+.toggle-text {
+  font-family: 'Arial', sans-serif;
+  user-select: none;
+  pointer-events: none;
+  transition: fill 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

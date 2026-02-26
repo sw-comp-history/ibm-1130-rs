@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM 1130 Assembly Game</title>
+    
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="/ibm-1130-rs/asm-game-25afe163b0ae0b6e.css" integrity="sha384-yy3vjPZ1zTE/BayUJn3r8SnoqtJuUWV9A7/l/tSIwnWei+0vJnTL4MPFM6GnSqIV"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/layout-e85a202394386a20.css" integrity="sha384-itlM77VCPI3JPAG81jT0+WzttkhyefQX3wPlLxonXySCZ7x0/1ErcUZFVpy/UgKV"/>
+    <!-- Tab container and peripheral styles -->
+    <link rel="stylesheet" href="/ibm-1130-rs/tab_container-b45a9f6f77baa474.css" integrity="sha384-9h4NlDaOKVfYahei6o4tHA41nUPF3uJGhZpnGNY4fwjYHLEdds+WrPn94YFikqNk"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/keypunch-ecf3dc8d18bea44e.css" integrity="sha384-+DKqEvg4M4v73xcDx66XzBJNrg/RUqOFZfLgomBIfxifgAagaYSanPwUgupZTrH5"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/printer-d8fea460844dbf05.css" integrity="sha384-JjVHcBe5I9Lhjtf+ljL2XVpRfXhZOQa3/0QqmOZRlZaME4Klyry1FNvNkDsZvHap"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/toggle_switch-cfb35b289faa7030.css" integrity="sha384-aWEXzH22fLgIN2MMUd5D3cuBQgXah+JdMofrlkYRnpx8s8wJcnx0lYvqoEKLN2rq"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/sixteen_bit_panel-d66ef3d0cf69939e.css" integrity="sha384-L22GHKp95ucmg7MC9HgsMPKgEZi/n6syjDmbEYo+RxqcbaCbnattKF14n3PabtcX"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/indicator_lights-3b16ecef48bc9292.css" integrity="sha384-CAkg7d5ybbHhFBrmVKLcfBY9iPret/H7Oubw6fR/NyYqbLy6ccC3NTR4ru4fiSIs"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/emergency_stop-8a1006c3a9a86eb8.css" integrity="sha384-/WzzXqg/ryIg+SzlpTRxRDPfVOf6aQ/wC1GwVJLyxCXu2MsVhmMcPweyu3Z5HVca"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/circular_knob-e38d85e24dee418e.css" integrity="sha384-HHbGrdCHxcjDdf5zuEEQs54ZcKPd8WZo+VbgEi4dY8kjM2afcnEJlE1DVUJngJhb"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/power_switch-d3fdc275b4c504da.css" integrity="sha384-LELUHwnZ3qYntS+gIp7Dtq+NR/M/zBdrlQdPqwhR9CXNrKAQL5jLFwpGnVCTjVfQ"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/lamp_test_button-3da317e2558d67c6.css" integrity="sha384-ApdSNnRdRq+B4Z2MjyCSfrDNPfQlkd8XmMgejxlfmhRXy3XtteU4Nse/yQGKxCOr"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/console_panel-3ab01360fcf87ecb.css" integrity="sha384-nDIm/tFE3v9/ZKnPQhNKxZ+zP5tdsLfiv9fiHJmjUafHN3/ncC4/g+qQVn6z2lU5"/>
+    
+<script type="module">
+import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-20d678d8b6b3e4b8.js';
+const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-20d678d8b6b3e4b8_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-20d678d8b6b3e4b8.js" crossorigin="anonymous" integrity="sha384-FqKfj2bwIGh/PlhJJ9UrfHQJkrr4d2QT69dqU/ZeakO27FfQshz/7PHRq/yUztjn"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-20d678d8b6b3e4b8_bg.wasm" crossorigin="anonymous" integrity="sha384-JPcaQfmFTcKYKNlH4cRka18dTkFEQZTYYbu7xTBXqwu+xaJr6AvOMRSYoIlqItpT" as="fetch" type="application/wasm"></head>
+<body>
+    <!-- Yew will mount the app here -->
+</body>
+</html>

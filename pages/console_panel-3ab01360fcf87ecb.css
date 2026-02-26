@@ -1,0 +1,432 @@
+/* IBM 1130 Console - Full width layout, minimal padding */
+
+.console-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 16px;
+  padding-bottom: 40px;  /* Space for lamp test button */
+  background: #1a1a1a;
+  border-radius: 6px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Top Section: Emergency Stop | Indicator Lights | Knob */
+.console-top {
+  display: flex;
+  gap: 4px;
+  background: #4a4a4a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 4px;
+  height: 28vh;
+  min-height: 160px;
+  max-height: 240px;
+}
+
+.lights-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+.knob-panel {
+  aspect-ratio: 1;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Knob sizing - fits inside square panel */
+.console-panel .circular-knob-container {
+  transform: scale(0.55);
+  transform-origin: center;
+}
+
+/* Middle Section: Toggle Switches - compact, centered, narrower */
+.console-switches {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 50%;
+  box-sizing: border-box;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.console-panel .sixteen-bit-panel {
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
+.console-panel .sixteen-bit-panel .toggle-container {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.console-panel .value-display {
+  background: #111;
+  border: 1px solid #333;
+  color: #4fd1c5;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+}
+
+/* Bottom Section: Buttons + Keyboard */
+.console-keyboard-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #222;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+/* Button grids - 2 columns each side */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 38px);
+  grid-auto-rows: 34px;
+  gap: 4px;
+  align-content: center;
+}
+
+.keyboard-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+}
+
+.keyboard-svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Console buttons - SQUARE, BRIGHT gel colors */
+.console-btn {
+  width: 38px;
+  height: 34px;
+  padding: 2px;
+  font-size: 7px;
+  font-weight: 900;
+  font-family: 'Arial Black', 'Helvetica', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  border: 1px solid rgba(0,0,0,0.4);
+  border-radius: 3px;
+  cursor: pointer;
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+  box-shadow:
+    0 2px 0 rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+  transition: all 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.0;
+  text-align: center;
+}
+
+.console-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.console-btn:not(:disabled):hover {
+  filter: brightness(1.2);
+}
+
+.console-btn:not(:disabled):active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+/* EXACT IBM 1130 CONSOLE BUTTON COLORS - matched from reference photo */
+.console-btn.gray {
+  background: linear-gradient(180deg, #9a9a9a 0%, #707070 100%);
+  color: #333 !important;
+  text-shadow: none;
+}
+.console-btn.red {
+  /* Dark maroon red from photo */
+  background: linear-gradient(180deg, #b83030 0%, #802020 100%);
+  color: #fff !important;
+}
+.console-btn.darkgreen {
+  /* Dark teal-green "FILE READY" button */
+  background: linear-gradient(180deg, #2a8070 0%, #1a5a50 100%);
+  color: #fff !important;
+}
+.console-btn.green {
+  /* Bright green "RUN" button */
+  background: linear-gradient(180deg, #30b830 0%, #208020 100%);
+  color: #111 !important;
+  text-shadow: none;
+}
+.console-btn.salmon {
+  /* Peach/salmon "DISK UNLOCK" button */
+  background: linear-gradient(180deg, #e8a080 0%, #c08060 100%);
+  color: #333 !important;
+  text-shadow: none;
+}
+.console-btn.yellow {
+  /* Bright yellow "FORMS CHECK" button */
+  background: linear-gradient(180deg, #e8c820 0%, #c0a010 100%);
+  color: #222 !important;
+  text-shadow: none;
+}
+.console-btn.blue {
+  background: linear-gradient(180deg, #4169e1 0%, #2244aa 100%);
+  color: #fff !important;
+}
+.console-btn.white {
+  background: linear-gradient(180deg, #fff 0%, #ddd 100%);
+  color: #222 !important;
+  text-shadow: none;
+}
+.console-btn.teal {
+  /* Teal/cyan button */
+  background: linear-gradient(180deg, #40a8a0 0%, #208080 100%);
+  color: #fff !important;
+}
+.console-btn.cyan {
+  background: linear-gradient(180deg, #00e0e0 0%, #00b0b0 100%);
+  color: #000 !important;
+  text-shadow: none;
+}
+
+/* Power switch container - same size as buttons */
+.console-panel .power-switch-container {
+  width: 38px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.console-panel .power-switch-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Console/Keyboard switch - white version of power switch */
+.console-keyboard-switch {
+  width: 38px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.console-keyboard-switch .kb-switch-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Status Lights Panel - Left side indicator lights */
+.status-lights-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.status-light-row {
+  display: flex;
+  gap: 4px;
+}
+
+.status-light {
+  width: 50px;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 2px;
+  border-radius: 3px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.status-light span {
+  font-size: 5px;
+  font-weight: bold;
+  color: rgba(0,0,0,0.6);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Horizontal lines above and below text */
+.light-line {
+  width: 80%;
+  height: 1px;
+  background: rgba(0,0,0,0.3);
+  margin: 1px 0;
+}
+
+/* Gray lights (unlabeled, K.B. SELECT) */
+.status-light.gray-light {
+  background: linear-gradient(180deg, #8a8a8a 0%, #6a6a6a 100%);
+  border: 1px solid #555;
+}
+.status-light.gray-light.lit {
+  background: linear-gradient(180deg, #b0b0b0 0%, #909090 100%);
+  box-shadow: 0 0 6px rgba(160, 160, 160, 0.5);
+}
+
+/* Orange/Salmon light (DISK UNLOCK) */
+.status-light.orange-light {
+  background: linear-gradient(180deg, #e8a080 0%, #c08060 100%);
+  border: 1px solid #a06040;
+}
+.status-light.orange-light.lit {
+  background: linear-gradient(180deg, #ffb090 0%, #e09070 100%);
+  box-shadow: 0 0 8px rgba(255, 160, 100, 0.6);
+}
+
+/* Dark Green/Teal light (FILE READY) */
+.status-light.darkgreen-light {
+  background: linear-gradient(180deg, #2a8070 0%, #1a5a50 100%);
+  border: 1px solid #104040;
+}
+.status-light.darkgreen-light.lit {
+  background: linear-gradient(180deg, #40a090 0%, #308070 100%);
+  box-shadow: 0 0 8px rgba(64, 160, 144, 0.6);
+}
+.status-light.darkgreen-light span {
+  color: rgba(255,255,255,0.8);
+}
+
+/* Bright Green light (RUN) */
+.status-light.green-light {
+  background: linear-gradient(180deg, #30b830 0%, #208020 100%);
+  border: 1px solid #106010;
+}
+.status-light.green-light.lit {
+  background: linear-gradient(180deg, #50dd50 0%, #30b030 100%);
+  box-shadow: 0 0 10px rgba(80, 221, 80, 0.7);
+}
+
+/* Red/Maroon light (PARITY CHECK) */
+.status-light.red-light {
+  background: linear-gradient(180deg, #b83030 0%, #802020 100%);
+  border: 1px solid #601010;
+}
+.status-light.red-light.lit {
+  background: linear-gradient(180deg, #dd5050 0%, #b03030 100%);
+  box-shadow: 0 0 10px rgba(221, 80, 80, 0.7);
+}
+.status-light.red-light span {
+  color: rgba(255,255,255,0.8);
+}
+
+/* Yellow light (FORMS CHECK) */
+.status-light.yellow-light {
+  background: linear-gradient(180deg, #e8c820 0%, #c0a010 100%);
+  border: 1px solid #908000;
+}
+.status-light.yellow-light.lit {
+  background: linear-gradient(180deg, #ffe840 0%, #e0c020 100%);
+  box-shadow: 0 0 10px rgba(255, 232, 64, 0.7);
+}
+
+/* Lamp Test Section - Bottom right CE panel */
+.lamp-test-section {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #333;
+  border: 1px dashed #666;
+  border-radius: 4px;
+}
+
+.lamp-test-section .lamp-test-label {
+  font-size: 8px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.lamp-test-btn {
+  padding: 6px 12px;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #4a4a4a 0%, #333 100%);
+  border: 1px solid #555;
+  border-radius: 3px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.lamp-test-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #5a5a5a 0%, #444 100%);
+  color: #fff;
+}
+
+.lamp-test-btn:active:not(:disabled) {
+  background: linear-gradient(180deg, #666 0%, #555 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.lamp-test-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .console-top {
+    flex-direction: column;
+  }
+
+  .knob-panel {
+    width: auto;
+  }
+
+  .console-keyboard-area {
+    flex-direction: column;
+  }
+
+  .keyboard-center {
+    order: -1;
+    width: 100%;
+    max-width: none;
+  }
+}

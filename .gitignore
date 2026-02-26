@@ -1,6 +1,5 @@
 # Build artifacts
 /target/
-/pages/
 /dist/
 
 # Cargo

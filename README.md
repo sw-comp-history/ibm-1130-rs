@@ -97,21 +97,15 @@ The production build outputs to `./pages/`.
 
 ### Deploying to GitHub Pages
 
-1. Build locally:
-   ```bash
-   trunk build --release
-   ```
+Build and commit:
+```bash
+./build-all.sh
+git add pages
+git commit -m "Build for deploy"
+git push
+```
 
-2. Update gh-pages branch:
-   ```bash
-   git checkout gh-pages
-   rm -rf *.js *.wasm *.css index.html
-   cp -r pages/* .
-   git add .
-   git commit -m "Deploy"
-   git push
-   git checkout main
-   ```
+GitHub Actions automatically deploys from `./pages` when changes are pushed to main.
 
 ## Project Structure
 
