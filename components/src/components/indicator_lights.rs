@@ -130,6 +130,98 @@ pub fn register_display(props: &RegisterDisplayProps) -> Html {
     }
 }
 
+/// Control Panel Display Component (Right Side)
+///
+/// Displays the vertical control indicators:
+/// - OP Code (5 bits)
+/// - Format/Tag (F, T0, T1)
+/// - Cycle indicators (T0-T7)
+/// - Status indicators (W, R, IA)
+#[derive(Properties, PartialEq)]
+pub struct ControlDisplayProps {
+    /// Operation code (5 bits)
+    #[prop_or(0)]
+    pub op_code: u8,
+    /// Format bit (long instruction)
+    #[prop_or(false)]
+    pub format: bool,
+    /// Tag bits (index register selection)
+    #[prop_or(0)]
+    pub tag: u8,
+    /// Cycle/timing indicator (0-7)
+    #[prop_or(0)]
+    pub cycle: u8,
+    /// Wait state
+    #[prop_or(false)]
+    pub wait: bool,
+    /// Run state
+    #[prop_or(false)]
+    pub run: bool,
+    /// Indirect addressing
+    #[prop_or(false)]
+    pub indirect: bool,
+    /// Carry flag
+    #[prop_or(false)]
+    pub carry: bool,
+    /// Overflow flag
+    #[prop_or(false)]
+    pub overflow: bool,
+    /// Lamp test mode
+    #[prop_or(false)]
+    pub lamp_test: bool,
+    /// Power state
+    #[prop_or(true)]
+    pub power_on: bool,
+}
+
+#[function_component(ControlDisplay)]
+pub fn control_display(props: &ControlDisplayProps) -> Html {
+    let show = props.power_on;
+
+    html! {
+        <div class="control-display">
+            // OP Code column (5 bits)
+            <div class="control-column">
+                <div class="column-label">{"OP"}</div>
+                { for (0..5).map(|bit| {
+                    let is_lit = show && (props.lamp_test || ((props.op_code >> (4 - bit)) & 1 == 1));
+                    let class = if is_lit { "control-indicator lit" } else { "control-indicator unlit" };
+                    html! { <div class={class}>{bit}</div> }
+                })}
+            </div>
+
+            // Tag/Format column
+            <div class="control-column">
+                <div class="column-label">{"TAG"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.format)).then_some("lit"))}>{"F"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || (props.tag & 2 != 0))).then_some("lit"))}>{"T0"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || (props.tag & 1 != 0))).then_some("lit"))}>{"T1"}</div>
+                <div class="column-label">{"IA"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.indirect)).then_some("lit"))}>{"IND"}</div>
+            </div>
+
+            // Cycle column (T0-T7)
+            <div class="control-column">
+                <div class="column-label">{"CYC"}</div>
+                { for (0..8).map(|t| {
+                    let is_lit = show && (props.lamp_test || props.cycle == t);
+                    let class = if is_lit { "control-indicator lit" } else { "control-indicator unlit" };
+                    html! { <div class={class}>{format!("T{}", t)}</div> }
+                })}
+            </div>
+
+            // Status column
+            <div class="control-column">
+                <div class="column-label">{"STS"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.wait)).then_some("lit"))}>{"W"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.run)).then_some("lit"))}>{"R"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.carry)).then_some("lit"))}>{"C"}</div>
+                <div class={classes!("control-indicator", (show && (props.lamp_test || props.overflow)).then_some("lit"))}>{"V"}</div>
+            </div>
+        </div>
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

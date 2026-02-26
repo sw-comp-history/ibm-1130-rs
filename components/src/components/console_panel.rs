@@ -8,7 +8,7 @@
 use yew::prelude::*;
 use crate::components::circular_knob::{CircularKnob, SpeedMode};
 use crate::components::emergency_stop::EmergencyStop;
-use crate::components::indicator_lights::RegisterDisplay;
+use crate::components::indicator_lights::{RegisterDisplay, ControlDisplay};
 use crate::components::power_switch::PowerSwitch;
 use crate::components::sixteen_bit_panel::SixteenBitPanel;
 
@@ -23,11 +23,33 @@ pub struct Registers {
     pub afr: u16,
 }
 
+/// IBM 1130 Control/Status State (right-side indicators)
+#[derive(Clone, Copy, PartialEq, Default)]
+pub struct ControlState {
+    /// Operation code (5 bits)
+    pub op_code: u8,
+    /// Format bit (long instruction)
+    pub format: bool,
+    /// Tag bits (index register selection, 2 bits)
+    pub tag: u8,
+    /// Cycle/timing indicator (0-7)
+    pub cycle: u8,
+    /// Wait state
+    pub wait: bool,
+    /// Indirect addressing
+    pub indirect: bool,
+    /// Carry flag
+    pub carry: bool,
+    /// Overflow flag
+    pub overflow: bool,
+}
+
 /// Console Panel State
 #[derive(Clone, PartialEq)]
 pub struct ConsoleState {
     pub switches: u16,
     pub registers: Registers,
+    pub control: ControlState,
     pub speed_mode: SpeedMode,
     pub power_on: bool,
     pub lamp_test: bool,
@@ -39,6 +61,7 @@ impl Default for ConsoleState {
         Self {
             switches: 0,
             registers: Registers::default(),
+            control: ControlState::default(),
             speed_mode: SpeedMode::Run,
             power_on: false,
             lamp_test: false,
@@ -282,6 +305,22 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             <div class="console-top">
                 <EmergencyStop />
                 <div class="lights-panel">
+                    // Left section: Status lights (moved from bottom)
+                    <div class="status-section">
+                        <div class="status-column">
+                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
+                            <div class={classes!("status-indicator", (state.lamp_test || state.power_on).then_some("lit"))}>{"DISK\nUNLOCK"}</div>
+                            <div class={classes!("status-indicator", "green", (state.lamp_test || state.running).then_some("lit"))}>{"RUN"}</div>
+                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
+                        </div>
+                        <div class="status-column">
+                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
+                            <div class={classes!("status-indicator", "green", (state.lamp_test).then_some("lit"))}>{"FILE\nREADY"}</div>
+                            <div class={classes!("status-indicator", "red", (state.lamp_test).then_some("lit"))}>{"PARITY\nCHECK"}</div>
+                            <div class={classes!("status-indicator", "yellow", (state.lamp_test).then_some("lit"))}>{"FORMS\nCHECK"}</div>
+                        </div>
+                    </div>
+                    // Middle section: Register indicators (6 rows × 16)
                     <RegisterDisplay
                         iar={state.registers.iar}
                         sar={state.registers.sar}
@@ -289,6 +328,20 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                         afr={state.registers.afr}
                         acc={state.registers.acc}
                         ext={state.registers.ext}
+                        lamp_test={state.lamp_test}
+                        power_on={state.power_on}
+                    />
+                    // Right section: Control/Status indicators
+                    <ControlDisplay
+                        op_code={state.control.op_code}
+                        format={state.control.format}
+                        tag={state.control.tag}
+                        cycle={state.control.cycle}
+                        wait={state.control.wait}
+                        run={state.running}
+                        indirect={state.control.indirect}
+                        carry={state.control.carry}
+                        overflow={state.control.overflow}
                         lamp_test={state.lamp_test}
                         power_on={state.power_on}
                     />

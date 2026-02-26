@@ -32,8 +32,24 @@
   min-width: 0;
   display: flex;
   align-items: stretch;
+  gap: 4px;
   background: #3a3a3a;
   border-radius: 4px;
+  padding: 4px;
+}
+
+/* Ensure indicator-display (middle section) takes most space */
+.lights-panel > .indicator-display {
+  flex: 1;
+}
+
+/* Status section (left) and control-display (right) are fixed width */
+.lights-panel > .status-section {
+  flex-shrink: 0;
+}
+
+.lights-panel > .control-display {
+  flex-shrink: 0;
 }
 
 .knob-panel {
