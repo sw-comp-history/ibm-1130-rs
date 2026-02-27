@@ -305,7 +305,7 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             <div class="console-top">
                 <EmergencyStop />
                 <div class="lights-panel">
-                    // Left/Center section: Register indicators (6 rows × 16)
+                    // Left section: Register indicators (6 rows × 16)
                     <RegisterDisplay
                         iar={state.registers.iar}
                         sar={state.registers.sar}
@@ -316,6 +316,10 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                         lamp_test={state.lamp_test}
                         power_on={state.power_on}
                     />
+                    // Middle section: Black unlabeled backlit panel
+                    <div class="center-panel">
+                        <div class="center-panel-inner" />
+                    </div>
                     // Right section: Control/Status indicators
                     <ControlDisplay
                         op_code={state.control.op_code}

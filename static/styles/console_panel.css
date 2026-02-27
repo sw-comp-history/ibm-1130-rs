@@ -38,16 +38,34 @@
   padding: 4px;
 }
 
-/* Ensure indicator-display (middle section) takes most space */
+/* Register indicator display takes most space */
 .lights-panel > .indicator-display {
-  flex: 1;
+  flex: 3;
+  min-width: 0;
 }
 
-/* Status section (left) and control-display (right) are fixed width */
-.lights-panel > .status-section {
+/* Center black panel - square aspect ratio */
+.lights-panel > .center-panel {
   flex-shrink: 0;
+  aspect-ratio: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
 }
 
+.center-panel-inner {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a;
+  border-radius: 2px;
+  border: 1px solid #222;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Control display (right) is fixed width */
 .lights-panel > .control-display {
   flex-shrink: 0;
 }
@@ -81,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-self: center;
-  width: 50%;
+  width: 38%;
   box-sizing: border-box;
   margin-top: 2px;
   margin-bottom: 2px;
