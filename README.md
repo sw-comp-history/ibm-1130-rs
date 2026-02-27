@@ -99,6 +99,24 @@ trunk serve
 
 The production build outputs to `./pages/`.
 
+### Code Quality
+
+**All code must be clean before committing:**
+
+```bash
+# Fix all clippy warnings (required)
+cargo clippy --all-targets
+cargo clippy --fix --lib -p components --allow-dirty
+
+# Format code
+cargo fmt
+
+# Run tests
+cargo test
+```
+
+No clippy warnings. No tech debt. No shortcuts.
+
 ### Deploying to GitHub Pages
 
 Build and commit:

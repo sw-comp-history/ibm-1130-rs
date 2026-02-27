@@ -157,17 +157,14 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
             }
 
             // Handle printable character
-            if key.len() == 1 {
-                if let Some(c) = key.chars().next() {
-                    if *current_column < 80 {
-                        let mut new_deck = (*deck).clone();
-                        let _ = new_deck.current_mut().set_column_char(*current_column, c);
-                        deck.set(new_deck.clone());
-                        current_column.set(*current_column + 1);
-                        on_deck_change.emit(new_deck);
-                    }
+            if key.len() == 1 && *current_column < 80
+                && let Some(c) = key.chars().next() {
+                    let mut new_deck = (*deck).clone();
+                    let _ = new_deck.current_mut().set_column_char(*current_column, c);
+                    deck.set(new_deck.clone());
+                    current_column.set(*current_column + 1);
+                    on_deck_change.emit(new_deck);
                 }
-            }
         })
     };
 
@@ -177,8 +174,8 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
         let current_column = current_column.clone();
         let on_deck_change = props.on_deck_change.clone();
         Callback::from(move |e: InputEvent| {
-            if let Some(input) = e.target() {
-                if let Ok(input) = input.dyn_into::<HtmlInputElement>() {
+            if let Some(input) = e.target()
+                && let Ok(input) = input.dyn_into::<HtmlInputElement>() {
                     let text = input.value();
                     let mut new_deck = (*deck).clone();
                     let card = new_deck.current_mut();
@@ -194,7 +191,6 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
                     current_column.set(col);
                     on_deck_change.emit(new_deck);
                 }
-            }
         })
     };
 
@@ -269,10 +265,10 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
             let current_column = current_column.clone();
             let on_deck_change = on_deck_change.clone();
 
-            if let Some(input) = e.target() {
-                if let Ok(input) = input.dyn_into::<HtmlInputElement>() {
-                    if let Some(files) = input.files() {
-                        if let Some(file) = files.get(0) {
+            if let Some(input) = e.target()
+                && let Ok(input) = input.dyn_into::<HtmlInputElement>()
+                    && let Some(files) = input.files()
+                        && let Some(file) = files.get(0) {
                             let file = gloo::file::File::from(file);
                             let reader = gloo::file::callbacks::read_as_bytes(&file, move |result| {
                                 if let Ok(data) = result {
@@ -285,9 +281,6 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
                             // Keep the reader alive
                             std::mem::forget(reader);
                         }
-                    }
-                }
-            }
         })
     };
 
@@ -429,8 +422,8 @@ pub fn punch_card_svg(props: &PunchCardSvgProps) -> Html {
                 {
                     if card.card_type() == CardType::Text {
                         (0..80).filter_map(|col_idx| {
-                            if let Some(column) = card.get_column(col_idx) {
-                                if let Some(ch) = column.printed_char {
+                            if let Some(column) = card.get_column(col_idx)
+                                && let Some(ch) = column.printed_char {
                                     let x = left_margin + col_idx as f64 * col_width + col_width / 2.0;
                                     return Some(html! {
                                         <text x={x.to_string()} y={text_y.to_string()}
@@ -440,7 +433,6 @@ pub fn punch_card_svg(props: &PunchCardSvgProps) -> Html {
                                         </text>
                                     });
                                 }
-                            }
                             None
                         }).collect::<Html>()
                     } else {

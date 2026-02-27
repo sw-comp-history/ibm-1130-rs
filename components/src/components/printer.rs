@@ -12,6 +12,7 @@ use wasm_bindgen::prelude::*;
 
 /// Printer state
 #[derive(Clone, PartialEq)]
+#[derive(Default)]
 pub struct PrinterState {
     /// Lines that have been fully printed
     pub completed_lines: Vec<String>,
@@ -25,17 +26,6 @@ pub struct PrinterState {
     pub queue: Vec<String>,
 }
 
-impl Default for PrinterState {
-    fn default() -> Self {
-        Self {
-            completed_lines: Vec::new(),
-            current_line: String::new(),
-            char_position: 0,
-            printing: false,
-            queue: Vec::new(),
-        }
-    }
-}
 
 #[derive(Properties, PartialEq)]
 pub struct PrinterProps {
@@ -120,8 +110,8 @@ pub fn printer(props: &PrinterProps) -> Html {
                         if new_state.char_position < new_state.current_line.len() {
                             // Print next character
                             let ch = new_state.current_line.chars().nth(new_state.char_position);
-                            if let Some(c) = ch {
-                                if sound_enabled {
+                            if let Some(c) = ch
+                                && sound_enabled {
                                     // Only play sounds for actual printed characters, not every space
                                     if c == ' ' {
                                         // Only play space sound occasionally (every ~5 spaces)
@@ -132,7 +122,6 @@ pub fn printer(props: &PrinterProps) -> Html {
                                         play_click_sound(c);
                                     }
                                 }
-                            }
                             new_state.char_position += 1;
                             state.set(new_state);
                         } else {
@@ -180,14 +169,12 @@ pub fn printer(props: &PrinterProps) -> Html {
         let line_count = state.completed_lines.len();
         use_effect_with(line_count, move |_| {
             // Scroll greenbar to bottom to show newest content
-            if let Some(window) = web_sys::window() {
-                if let Some(document) = window.document() {
-                    if let Some(element) = document.get_element_by_id("greenbar") {
+            if let Some(window) = web_sys::window()
+                && let Some(document) = window.document()
+                    && let Some(element) = document.get_element_by_id("greenbar") {
                         let scroll_height = element.scroll_height();
                         element.set_scroll_top(scroll_height);
                     }
-                }
-            }
             || ()
         });
     }

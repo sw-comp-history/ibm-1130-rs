@@ -1,5 +1,20 @@
 # Claude Code Instructions for IBM 1130 Emulator
 
+## Code Quality Standards
+
+**Zero tolerance for tech debt. No shortcuts. No laziness.**
+
+Before every commit:
+1. Run `cargo clippy --all-targets` and fix ALL warnings
+2. Run `cargo fmt` to format code
+3. Run `cargo test` to verify tests pass
+
+Do not:
+- Ignore clippy warnings (they are not "just suggestions")
+- Declare victory prematurely
+- Leave code in a broken state
+- Skip verification steps
+
 ## Local Development Server
 
 **ALWAYS use port 9352 for local previews. Do not use random ports.**
