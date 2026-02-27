@@ -87,6 +87,7 @@ pub enum ConsoleAction {
     ToggleRunning,
     UpdateRegisters(Registers),
     ToggleHelp,
+    SetHelpActive(bool),
 }
 
 impl Reducible for ConsoleState {
@@ -153,6 +154,9 @@ impl Reducible for ConsoleState {
             ConsoleAction::ToggleHelp => {
                 new_state.help_active = !new_state.help_active;
             }
+            ConsoleAction::SetHelpActive(active) => {
+                new_state.help_active = active;
+            }
         }
 
         std::rc::Rc::new(new_state)
@@ -210,6 +214,10 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         let state = state.clone();
         Callback::from(move |_| {
             state.dispatch(ConsoleAction::TogglePower);
+            // Dismiss help when power is clicked
+            if state.help_active {
+                state.dispatch(ConsoleAction::ToggleHelp);
+            }
         })
     };
 
@@ -233,6 +241,22 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             state.dispatch(ConsoleAction::ToggleHelp);
         })
     };
+
+    // Auto-dismiss help after 5 seconds
+    {
+        let state = state.clone();
+        let help_active = state.help_active;
+        use_effect_with(help_active, move |&active| {
+            let timeout: Option<gloo::timers::callback::Timeout> = if active {
+                Some(gloo::timers::callback::Timeout::new(5000, move || {
+                    state.dispatch(ConsoleAction::SetHelpActive(false));
+                }))
+            } else {
+                None
+            };
+            move || drop(timeout)
+        });
+    }
 
     let on_load = {
         let state = state.clone();

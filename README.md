@@ -46,6 +46,7 @@ IBM 1131 console printer with typewriter-style output and greenbar paper.
 - **7-position speed control knob** - SS, SMC, INT RUN, RUN, SI, DISP, LOAD
 - **Power switch and control buttons**
 - **Lamp test** for verifying all indicators
+- **Help button** with guided power-on tutorial
 
 ### Keypunch
 - **IBM 029 Keypunch simulation**
