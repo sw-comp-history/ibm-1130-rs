@@ -179,6 +179,9 @@ pub struct ConsolePanelProps {
     pub on_start_stop: Callback<bool>,
     #[prop_or_default]
     pub on_reset: Callback<()>,
+    /// External help state (controlled from header)
+    #[prop_or(false)]
+    pub help_active: bool,
 }
 
 #[function_component(ConsolePanel)]
@@ -214,10 +217,6 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         let state = state.clone();
         Callback::from(move |_| {
             state.dispatch(ConsoleAction::TogglePower);
-            // Dismiss help when power is clicked
-            if state.help_active {
-                state.dispatch(ConsoleAction::ToggleHelp);
-            }
         })
     };
 
@@ -234,29 +233,6 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             state.dispatch(ConsoleAction::SetLampTest(false));
         })
     };
-
-    let on_help_click = {
-        let state = state.clone();
-        Callback::from(move |_: MouseEvent| {
-            state.dispatch(ConsoleAction::ToggleHelp);
-        })
-    };
-
-    // Auto-dismiss help after 5 seconds
-    {
-        let state = state.clone();
-        let help_active = state.help_active;
-        use_effect_with(help_active, move |&active| {
-            let timeout: Option<gloo::timers::callback::Timeout> = if active {
-                Some(gloo::timers::callback::Timeout::new(5000, move || {
-                    state.dispatch(ConsoleAction::SetHelpActive(false));
-                }))
-            } else {
-                None
-            };
-            move || drop(timeout)
-        });
-    }
 
     let on_load = {
         let state = state.clone();
@@ -454,9 +430,9 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 // Right side: Switches and control buttons
                 <div class="button-grid right-buttons">
                     // Row 1: Power switch and Console/Int Keyboard switch (white)
-                    <div class={classes!("power-switch-wrapper", state.help_active.then_some("help-blink"))}>
+                    <div class={classes!("power-switch-wrapper", props.help_active.then_some("help-blink"))}>
                         <PowerSwitch is_on={state.power_on} on_toggle={on_power_toggle} />
-                        if state.help_active {
+                        if props.help_active {
                             <div class="help-tooltip">{"Click power to start."}</div>
                         }
                     </div>
@@ -497,12 +473,6 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     disabled={!state.power_on}
                 >
                     {"LAMP TEST"}
-                </button>
-                <button
-                    class={classes!("help-btn", state.help_active.then_some("active"))}
-                    onclick={on_help_click}
-                >
-                    {"HELP"}
                 </button>
             </div>
         </div>

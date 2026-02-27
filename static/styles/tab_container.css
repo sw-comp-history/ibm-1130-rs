@@ -58,6 +58,35 @@
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
+/* Help button in tab nav */
+.tab-help-btn {
+  width: 28px;
+  height: 28px;
+  margin-left: 8px;
+  padding: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background: #3a6ea5;
+  border: 1px solid #4a7eb5;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-help-btn:hover {
+  background: #4a8ec5;
+}
+
+.tab-help-btn.active {
+  background: #5aaee5;
+  box-shadow: 0 0 8px rgba(90, 174, 229, 0.6);
+}
+
 /* Tab Content */
 .tab-content {
   flex: 1;

@@ -64,13 +64,14 @@ pub fn app() -> Html {
     // Tab state
     let active_tab = use_state(|| Tab::Assembler);
 
+    // Help button state (for Console panel)
+    let help_active = use_state(|| false);
+
     // Keypunch deck state
     let keypunch_deck = use_state(Deck::default);
 
     // Printer state - lines to print
     let printer_content = use_state(sample_assembler_listing);
-
-    // Console panel state is managed internally by ConsolePanel component
 
     // Load challenges using use_memo to avoid recreating on every render
     let challenges = use_memo((), |_| get_all_challenges());
@@ -407,10 +408,38 @@ pub fn app() -> Html {
     // Tab change callback
     let on_tab_change = {
         let active_tab = active_tab.clone();
+        let help_active = help_active.clone();
         Callback::from(move |tab: Tab| {
             active_tab.set(tab);
+            // Dismiss help when changing tabs
+            help_active.set(false);
         })
     };
+
+    // Help toggle callback
+    let on_help_toggle = {
+        let help_active = help_active.clone();
+        Callback::from(move |_: ()| {
+            help_active.set(!*help_active);
+        })
+    };
+
+    // Auto-dismiss help after 5 seconds
+    {
+        let help_active = help_active.clone();
+        let help_is_active = *help_active;
+        use_effect_with(help_is_active, move |&active| {
+            let timeout: Option<gloo::timers::callback::Timeout> = if active {
+                let help_active = help_active.clone();
+                Some(gloo::timers::callback::Timeout::new(5000, move || {
+                    help_active.set(false);
+                }))
+            } else {
+                None
+            };
+            move || drop(timeout)
+        });
+    }
 
     // Keypunch: Load deck into assembler editor
     let load_deck_to_editor = {
@@ -682,9 +711,10 @@ pub fn app() -> Html {
     // Console Panel Tab Content
     let console_content_html = {
         let console_registers = build_console_registers(&cpu_state);
+        let help_is_active = *help_active;
         html! {
             <div class="console-tab">
-                <ConsolePanel external_registers={Some(console_registers)} />
+                <ConsolePanel external_registers={Some(console_registers)} help_active={help_is_active} />
             </div>
         }
     };
@@ -695,7 +725,13 @@ pub fn app() -> Html {
                 title="IBM 1130 System Emulator"
                 subtitle="Keypunch, Printer, Assembler, and Console"
             >
-                <TabNav active_tab={*active_tab} on_tab_change={on_tab_change.clone()} />
+                <TabNav
+                    active_tab={*active_tab}
+                    on_tab_change={on_tab_change.clone()}
+                    show_help_button={*active_tab == Tab::Console}
+                    help_active={*help_active}
+                    on_help_toggle={on_help_toggle.clone()}
+                />
             </Header>
 
             <TabContainer

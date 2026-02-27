@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/ibm-1130-rs/asm-game-25afe163b0ae0b6e.css" integrity="sha384-yy3vjPZ1zTE/BayUJn3r8SnoqtJuUWV9A7/l/tSIwnWei+0vJnTL4MPFM6GnSqIV"/>
     <link rel="stylesheet" href="/ibm-1130-rs/layout-e85a202394386a20.css" integrity="sha384-itlM77VCPI3JPAG81jT0+WzttkhyefQX3wPlLxonXySCZ7x0/1ErcUZFVpy/UgKV"/>
     <!-- Tab container and peripheral styles -->
-    <link rel="stylesheet" href="/ibm-1130-rs/tab_container-7bfdc9d86f1e72c6.css" integrity="sha384-/UieyG1iPhkMBMq7XDtmqdcQzBlHXJ+fBZXyRaEUKJwO+AVUGgwg1jZ840lJjGfy"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/tab_container-b9076423f8d2511d.css" integrity="sha384-QrEmpciG4HKxCk9ZQnwM+EJXYcrODmoMouqJXRR+Y3ob4vRAOzoWEMxk2LRCHRN2"/>
     <link rel="stylesheet" href="/ibm-1130-rs/keypunch-ecf3dc8d18bea44e.css" integrity="sha384-+DKqEvg4M4v73xcDx66XzBJNrg/RUqOFZfLgomBIfxifgAagaYSanPwUgupZTrH5"/>
     <link rel="stylesheet" href="/ibm-1130-rs/printer-d8fea460844dbf05.css" integrity="sha384-JjVHcBe5I9Lhjtf+ljL2XVpRfXhZOQa3/0QqmOZRlZaME4Klyry1FNvNkDsZvHap"/>
     <link rel="stylesheet" href="/ibm-1130-rs/toggle_switch-cfb35b289faa7030.css" integrity="sha384-aWEXzH22fLgIN2MMUd5D3cuBQgXah+JdMofrlkYRnpx8s8wJcnx0lYvqoEKLN2rq"/>
@@ -22,8 +22,8 @@
     <link rel="stylesheet" href="/ibm-1130-rs/console_panel-c587d0cdf9883bf6.css" integrity="sha384-s781hUmJ940Wig0wAhwW2YXAW0PW399ytm8rJ13fbC6NlcmK+glODViAqmrbT8Wp"/>
     
 <script type="module">
-import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-d054a8e7ae8627cc.js';
-const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-d054a8e7ae8627cc_bg.wasm' });
+import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-f8a030669cd1ac25.js';
+const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-f8a030669cd1ac25_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -32,7 +32,7 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
-<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-d054a8e7ae8627cc.js" crossorigin="anonymous" integrity="sha384-V66EqcTnWLxyH0Ryvbhhtt3i3CnItJqcDGgit3AgR/4wJZAk8QMJdY/HCvUg0znj"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-d054a8e7ae8627cc_bg.wasm" crossorigin="anonymous" integrity="sha384-H6lQoakHsU9jPAZQqRqa2i87/urwXdWB91BwXRrxZwDhvIOWy7jdF5B5NKhXct3X" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-f8a030669cd1ac25.js" crossorigin="anonymous" integrity="sha384-RIlybDRjztasOG0s821EdDshM8l0D4p9J6dHwB3+R1yhipSPsON6KHY52BdFjFfH"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-f8a030669cd1ac25_bg.wasm" crossorigin="anonymous" integrity="sha384-mQsX1elefAZdUKLi/z4wZeeDyzyLlZgi/lgYs4/pNbQTflWW9unH/AZOB4omEWUJ" as="fetch" type="application/wasm"></head>
 <body>
     <!-- Yew will mount the app here -->
 </body>

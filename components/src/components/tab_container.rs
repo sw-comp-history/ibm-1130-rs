@@ -38,6 +38,15 @@ pub struct TabNavProps {
     pub active_tab: Tab,
     #[prop_or_default]
     pub on_tab_change: Callback<Tab>,
+    /// Show help button (only when on Console tab)
+    #[prop_or(false)]
+    pub show_help_button: bool,
+    /// Help button active state
+    #[prop_or(false)]
+    pub help_active: bool,
+    /// Callback when help button is clicked
+    #[prop_or_default]
+    pub on_help_toggle: Callback<()>,
 }
 
 #[function_component(TabNav)]
@@ -46,6 +55,13 @@ pub fn tab_nav(props: &TabNavProps) -> Html {
         let on_tab_change = props.on_tab_change.clone();
         Callback::from(move |_: MouseEvent| {
             on_tab_change.emit(tab);
+        })
+    };
+
+    let on_help_click = {
+        let on_help_toggle = props.on_help_toggle.clone();
+        Callback::from(move |_: MouseEvent| {
+            on_help_toggle.emit(());
         })
     };
 
@@ -66,6 +82,15 @@ pub fn tab_nav(props: &TabNavProps) -> Html {
                     </button>
                 }
             })}
+            if props.show_help_button {
+                <button
+                    class={classes!("tab-help-btn", props.help_active.then_some("active"))}
+                    onclick={on_help_click}
+                    title="Show help for Console panel"
+                >
+                    {"?"}
+                </button>
+            }
         </nav>
     }
 }
