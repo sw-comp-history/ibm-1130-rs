@@ -61,7 +61,7 @@
 /* Tab Content */
 .tab-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0.5rem 1rem;
   overflow-y: auto;
 }
 
@@ -115,7 +115,7 @@
   }
 
   .tab-content {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .placeholder-title {
