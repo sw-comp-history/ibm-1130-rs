@@ -106,36 +106,42 @@ pub fn sixteen_bit_panel(props: &SixteenBitPanelProps) -> Html {
                 </div>
             }
 
-            // Toggle switches section
+            // Toggle switches section with nibble dividers
             <div class="switches-section">
                 <div class="switches-row">
-                    // 4 nibbles (groups of 4 switches each)
+                    // Leading divider line (left of switch 0)
+                    <div class="nibble-divider" />
+                    // 4 nibbles (groups of 4 switches each) with dividers between
                     { for (0..4).map(|nibble_idx| {
                         html! {
-                            <div class="nibble-switches">
-                                { for (0..4).map(|bit_in_nibble| {
-                                    let bit_position = nibble_idx * 4 + bit_in_nibble;
-                                    let is_on = (*value >> (15 - bit_position)) & 1 == 1;
-                                    let weight = 8 >> bit_in_nibble; // 8, 4, 2, 1
+                            <>
+                                <div class="nibble-switches">
+                                    { for (0..4).map(|bit_in_nibble| {
+                                        let bit_position = nibble_idx * 4 + bit_in_nibble;
+                                        let is_on = (*value >> (15 - bit_position)) & 1 == 1;
+                                        let weight = 8 >> bit_in_nibble; // 8, 4, 2, 1
 
-                                    let toggle_bit = toggle_bit.clone();
-                                    let on_toggle = Callback::from(move |_| {
-                                        toggle_bit.emit(bit_position);
-                                    });
+                                        let toggle_bit = toggle_bit.clone();
+                                        let on_toggle = Callback::from(move |_| {
+                                            toggle_bit.emit(bit_position);
+                                        });
 
-                                    html! {
-                                        <div class="switch-with-label">
-                                            <div class="switch-number">{bit_position}</div>
-                                            <ToggleSwitch
-                                                value={weight}
-                                                is_on={is_on}
-                                                on_toggle={on_toggle}
-                                                disabled={props.mode != PanelMode::Interactive}
-                                            />
-                                        </div>
-                                    }
-                                })}
-                            </div>
+                                        html! {
+                                            <div class="switch-with-label">
+                                                <div class="switch-number">{bit_position}</div>
+                                                <ToggleSwitch
+                                                    value={weight}
+                                                    is_on={is_on}
+                                                    on_toggle={on_toggle}
+                                                    disabled={props.mode != PanelMode::Interactive}
+                                                />
+                                            </div>
+                                        }
+                                    })}
+                                </div>
+                                // Divider after each nibble
+                                <div class="nibble-divider" />
+                            </>
                         }
                     })}
                 </div>

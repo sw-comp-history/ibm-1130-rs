@@ -61,12 +61,18 @@
   justify-content: center;
   align-items: flex-start;
   gap: 0.2rem;
-  padding: 0 0.5rem;
-  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 0 0.3rem;
 }
 
-.nibble-switches:last-child {
-  border-right: none;
+/* White vertical divider lines between nibbles */
+/* Top aligns with number labels, bottom extends to toggle in down position */
+.nibble-divider {
+  width: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  align-self: flex-start;
+  height: 105px;
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
 }
 
 .switch-with-label {
