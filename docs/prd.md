@@ -89,6 +89,27 @@ A browser-based, interactive educational tool that simulates the IBM 1130 minico
 | Assembler | P0 | ✅ Complete |
 | FORTH | P2 | Planned |
 | APL | P3 | Planned |
+| RPG I/II | P3 | Planned |
+
+### Peripheral Visualization Tools
+
+| Tool | Description | Priority |
+|------|-------------|----------|
+| Disk Layout Viewer | Visual map of disk sectors, files, free space | P2 |
+| Tape File Browser | Reel contents, file marks, block structure | P3 |
+| Line Printer Output (1132) | High-speed output with greenbar paper | P2 |
+| Card Output Viewer (1442) | Punched card deck visualization | P2 |
+| Plotter Canvas (1627) | Real-time vector drawing display | P3 |
+| Vector Display (2250) | Refresh display with light pen simulation | P3 |
+
+### Demo Programs
+
+| Program | Language | Description |
+|---------|----------|-------------|
+| Plotting demos | FORTH | Draw geometric shapes, spirals, fractals |
+| Graphics primitives | Assembler | Line, circle, arc drawing routines |
+| APL visualizations | APL | Array-based graphics generation |
+| RPG reports | RPG I/II | Business report generation with formatting |
 
 ## "Day in the Life" Educational Scenarios
 

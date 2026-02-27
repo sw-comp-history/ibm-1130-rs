@@ -157,13 +157,50 @@
   - Dictionary management
   - Interactive word definition
   - Save/load to disk
+  - **Plotter graphics words** (PLOT, MOVE, PEN-UP, PEN-DOWN)
+  - Demo programs: spirals, fractals, geometric art
 - [ ] **APL System**
   - APL character set (keyboard mapping)
   - Workspace management
   - Array operations
   - Console I/O with APL symbols
+  - Graphics output to plotter/display
+- [ ] **RPG I/II System**
+  - RPG specification sheets (H, F, I, C, O)
+  - File description specifications
+  - Input/output specifications
+  - Calculation specifications
+  - Report generation with formatting
+  - Business application demos
 
-### Phase 15: Advanced Integration
+### Phase 15: Peripheral Visualization Tools
+- [ ] **Disk Layout Viewer**
+  - Visual sector map with color-coded allocation
+  - File directory browser
+  - Free space visualization
+  - Disk statistics (usage, fragmentation)
+- [ ] **Tape File Browser**
+  - Reel visualization with position indicator
+  - File mark and block structure display
+  - Tape contents listing
+  - Rewind/fast-forward animation
+- [ ] **Line Printer Output Viewer (1132)**
+  - Greenbar paper rendering
+  - Forms control visualization
+  - Print queue management
+  - Historical font rendering
+- [ ] **Card Output Viewer (1442)**
+  - Punched card deck display
+  - Hole pattern visualization
+  - Deck save/export
+  - Card-by-card navigation
+- [ ] **Plotter Canvas (1627)**
+  - Real-time pen movement
+  - Multi-color pen support
+  - Export to SVG/PNG
+  - Demo: FORTH-drawn graphics
+
+### Phase 16: Advanced Integration
 - [ ] **IBM 360/370 Graphics Terminal Mode**
   - Channel-to-channel adapter simulation
   - 2250 display driven by mainframe
