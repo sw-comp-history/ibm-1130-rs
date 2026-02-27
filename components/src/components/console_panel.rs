@@ -305,22 +305,7 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             <div class="console-top">
                 <EmergencyStop />
                 <div class="lights-panel">
-                    // Left section: Status lights (moved from bottom)
-                    <div class="status-section">
-                        <div class="status-column">
-                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
-                            <div class={classes!("status-indicator", (state.lamp_test || state.power_on).then_some("lit"))}>{"DISK\nUNLOCK"}</div>
-                            <div class={classes!("status-indicator", "green", (state.lamp_test || state.running).then_some("lit"))}>{"RUN"}</div>
-                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
-                        </div>
-                        <div class="status-column">
-                            <div class={classes!("status-indicator", (state.lamp_test).then_some("lit"))} />
-                            <div class={classes!("status-indicator", "green", (state.lamp_test).then_some("lit"))}>{"FILE\nREADY"}</div>
-                            <div class={classes!("status-indicator", "red", (state.lamp_test).then_some("lit"))}>{"PARITY\nCHECK"}</div>
-                            <div class={classes!("status-indicator", "yellow", (state.lamp_test).then_some("lit"))}>{"FORMS\nCHECK"}</div>
-                        </div>
-                    </div>
-                    // Middle section: Register indicators (6 rows × 16)
+                    // Left/Center section: Register indicators (6 rows × 16)
                     <RegisterDisplay
                         iar={state.registers.iar}
                         sar={state.registers.sar}

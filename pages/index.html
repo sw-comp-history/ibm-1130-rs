@@ -22,8 +22,8 @@
     <link rel="stylesheet" href="/ibm-1130-rs/console_panel-c13b66bd3c23866d.css" integrity="sha384-Nb5F4GuvFLjtDe1hHNIJRxwkrBqdfazxhHxuqfwS69LI3v5mGhhNWCFgKImVYSTo"/>
     
 <script type="module">
-import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-c3174e9c4ae5caea.js';
-const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-c3174e9c4ae5caea_bg.wasm' });
+import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-cbe1c388f722b361.js';
+const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-cbe1c388f722b361_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -32,7 +32,7 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
-<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-c3174e9c4ae5caea.js" crossorigin="anonymous" integrity="sha384-le8RS7cZ2qNx3+qsSXiGnFwtF7c7zU7SqcrxZ+4JOOjuUoHWBPlL/3XNPmzKfWFo"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-c3174e9c4ae5caea_bg.wasm" crossorigin="anonymous" integrity="sha384-Rq1SinTNmstby0BR4+FtpTksTSHzs7wyRaxoXmz6kbnMA4Cq8IftMugbb0znoCIT" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-cbe1c388f722b361.js" crossorigin="anonymous" integrity="sha384-le8RS7cZ2qNx3+qsSXiGnFwtF7c7zU7SqcrxZ+4JOOjuUoHWBPlL/3XNPmzKfWFo"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-cbe1c388f722b361_bg.wasm" crossorigin="anonymous" integrity="sha384-NEL2MqAcf4HEA0+PK0ZMpQdAOML/k+lcLKBz5Szzo5AwtbDyTHfEu2ymI1sxrKg0" as="fetch" type="application/wasm"></head>
 <body>
     <!-- Yew will mount the app here -->
 </body>
