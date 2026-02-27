@@ -104,3 +104,93 @@
 - [ ] API for programmatic access
 - [ ] Custom challenge creation
 - [ ] Community challenge sharing
+
+---
+
+## Peripheral Expansion Roadmap
+
+### Phase 9: Storage Peripherals
+- [ ] **2310/2311 Disk Drive**
+  - Disk cartridge visualization
+  - Read/write operations
+  - Disk file management
+  - Boot from disk
+- [ ] **Tape Drives (model TBD)**
+  - Reel-to-reel visualization
+  - Sequential read/write
+  - Tape file format support
+
+### Phase 10: Card Handling
+- [ ] **1442 Card Reader/Punch**
+  - Card deck loading animation
+  - Hopper and stacker visualization
+  - Read cards into memory
+  - Punch output cards
+  - Card jam simulation (educational)
+
+### Phase 11: Printing
+- [ ] **1132 Line Printer**
+  - High-speed print visualization
+  - Print chain/train display
+  - Greenbar paper output
+  - Forms control (skip to channel)
+
+### Phase 12: Communications
+- [ ] **1133 Multiplexor**
+  - Multi-terminal support
+  - Interrupt handling demonstration
+  - I/O channel visualization
+
+### Phase 13: Graphics
+- [ ] **1627 Drum Plotter**
+  - Vector drawing visualization
+  - Pen up/down operations
+  - Multi-color pen support
+- [ ] **2250 Vector Graphics Display**
+  - Vector refresh display simulation
+  - Light pen interaction
+  - Display list programming
+
+### Phase 14: Language Environments
+- [ ] **FORTH System**
+  - FORTH interpreter/compiler
+  - Dictionary management
+  - Interactive word definition
+  - Save/load to disk
+- [ ] **APL System**
+  - APL character set (keyboard mapping)
+  - Workspace management
+  - Array operations
+  - Console I/O with APL symbols
+
+### Phase 15: Advanced Integration
+- [ ] **IBM 360/370 Graphics Terminal Mode**
+  - Channel-to-channel adapter simulation
+  - 2250 display driven by mainframe
+  - Demonstrate 1130 as "graphics card"
+  - Historical CAD application demo
+
+---
+
+## "Day in the Life" Workflow Milestones
+
+### Milestone: Assembler Workflow
+- [ ] Keypunch → Card Reader → Assembler → Disk/Punch
+- [ ] Console debugging with register display
+- [ ] Line printer listing output
+
+### Milestone: FORTH Workflow
+- [ ] Boot FORTH from cards or disk
+- [ ] Interactive console programming
+- [ ] Save/restore dictionaries
+
+### Milestone: APL Workflow
+- [ ] APL keyboard input (special characters)
+- [ ] Workspace save/load
+- [ ] Console printer output with APL symbols
+
+### Milestone: Full System Demo
+- [ ] Boot sequence from cold start
+- [ ] Multiple peripheral interaction
+- [ ] Complete program development cycle
+- [ ] Archive to tape, restore from tape

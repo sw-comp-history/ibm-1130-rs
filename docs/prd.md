@@ -70,6 +70,69 @@ A browser-based, interactive educational tool that simulates the IBM 1130 minico
 | Memory watches | P3 | Planned |
 | Achievement system | P3 | Planned |
 
+### Future Peripherals
+
+| Peripheral | Model | Priority | Status |
+|------------|-------|----------|--------|
+| Internal Disk Drive | 2310/2311 | P2 | Planned |
+| Card Reader/Punch | 1442 | P2 | Planned |
+| Line Printer | 1132 | P2 | Planned |
+| Multiplexor | 1133 | P3 | Planned |
+| Drum Plotter | 1627 | P3 | Planned |
+| Vector Graphics Display | 2250 | P3 | Planned |
+| Tape Drives | TBD | P3 | Planned |
+
+### Programming Language Support
+
+| Language | Priority | Status |
+|----------|----------|--------|
+| Assembler | P0 | ✅ Complete |
+| FORTH | P2 | Planned |
+| APL | P3 | Planned |
+
+## "Day in the Life" Educational Scenarios
+
+The emulator aims to recreate authentic 1130 programming workflows:
+
+### Scenario 1: Assembler Programmer
+1. **Keypunch** source code onto cards
+2. **Load** card deck into card reader
+3. **Assemble** source program
+4. **Save** object deck to disk or punch cards
+5. **Execute** program with console interaction
+6. **Print** results on line printer
+
+### Scenario 2: FORTH Programmer
+1. **Load** FORTH system from card deck or disk
+2. **Boot** into FORTH interpreter
+3. **Define** words interactively via console
+4. **Save** dictionary to disk
+5. **Load/execute** programs from cards
+
+### Scenario 3: APL Programmer
+1. **Load** APL interpreter from disk
+2. **Type** APL expressions using console keyboard
+3. **Save** workspaces to disk
+4. **Load** workspaces from disk
+5. **Print** output on console printer or line printer
+
+### Data Flow Capabilities
+- **Cards → Memory**: Load programs/data from 1442
+- **Memory → Cards**: Punch output decks
+- **Cards → Disk**: Copy card images to disk files
+- **Disk → Cards**: Reproduce card decks from disk
+- **Memory → Tape**: Archive data to tape drives
+- **Tape → Memory**: Restore data from tape
+
+### Special Scenario: IBM 360/370 Graphics Terminal
+The IBM 1130 was used as a "smart terminal controller" for IBM 360/370 mainframes, driving the 2250 vector graphics display. This configuration allowed:
+- Mainframe applications to render vector graphics
+- 1130 handling display list management and refresh
+- Interactive graphics applications (CAD, scientific visualization)
+- Channel-to-channel communication between 1130 and 360/370
+
+This advanced scenario demonstrates the 1130's role in early computer graphics history.
+
 ## Success Metrics
 
 1. **Engagement**: Average session duration > 5 minutes
