@@ -182,6 +182,9 @@ pub struct ConsolePanelProps {
     /// External help state (controlled from header)
     #[prop_or(false)]
     pub help_active: bool,
+    /// Callback when power switch is clicked (to dismiss help)
+    #[prop_or_default]
+    pub on_power_click: Callback<()>,
 }
 
 #[function_component(ConsolePanel)]
@@ -215,8 +218,10 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
 
     let on_power_toggle = {
         let state = state.clone();
+        let on_power_click = props.on_power_click.clone();
         Callback::from(move |_| {
             state.dispatch(ConsoleAction::TogglePower);
+            on_power_click.emit(());
         })
     };
 

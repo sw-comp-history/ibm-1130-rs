@@ -712,9 +712,19 @@ pub fn app() -> Html {
     let console_content_html = {
         let console_registers = build_console_registers(&cpu_state);
         let help_is_active = *help_active;
+        let on_power_click = {
+            let help_active = help_active.clone();
+            Callback::from(move |_: ()| {
+                help_active.set(false);
+            })
+        };
         html! {
             <div class="console-tab">
-                <ConsolePanel external_registers={Some(console_registers)} help_active={help_is_active} />
+                <ConsolePanel
+                    external_registers={Some(console_registers)}
+                    help_active={help_is_active}
+                    on_power_click={on_power_click}
+                />
             </div>
         }
     };
