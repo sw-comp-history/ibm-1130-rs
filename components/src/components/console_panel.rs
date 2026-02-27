@@ -54,6 +54,7 @@ pub struct ConsoleState {
     pub power_on: bool,
     pub lamp_test: bool,
     pub running: bool,
+    pub help_active: bool,
 }
 
 impl Default for ConsoleState {
@@ -66,6 +67,7 @@ impl Default for ConsoleState {
             power_on: false,
             lamp_test: false,
             running: false,
+            help_active: false,
         }
     }
 }
@@ -84,6 +86,7 @@ pub enum ConsoleAction {
     Reset,
     ToggleRunning,
     UpdateRegisters(Registers),
+    ToggleHelp,
 }
 
 impl Reducible for ConsoleState {
@@ -146,6 +149,9 @@ impl Reducible for ConsoleState {
             }
             ConsoleAction::UpdateRegisters(regs) => {
                 new_state.registers = regs;
+            }
+            ConsoleAction::ToggleHelp => {
+                new_state.help_active = !new_state.help_active;
             }
         }
 
@@ -218,6 +224,13 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         let state = state.clone();
         Callback::from(move |_| {
             state.dispatch(ConsoleAction::SetLampTest(false));
+        })
+    };
+
+    let on_help_click = {
+        let state = state.clone();
+        Callback::from(move |_: MouseEvent| {
+            state.dispatch(ConsoleAction::ToggleHelp);
         })
     };
 
@@ -417,7 +430,10 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 // Right side: Switches and control buttons
                 <div class="button-grid right-buttons">
                     // Row 1: Power switch and Console/Int Keyboard switch (white)
-                    <PowerSwitch is_on={state.power_on} on_toggle={on_power_toggle} />
+                    <div class={classes!("power-switch-wrapper", state.help_active.then_some("help-blink"))}
+                         title={if state.help_active { "Click power to start." } else { "" }}>
+                        <PowerSwitch is_on={state.power_on} on_toggle={on_power_toggle} />
+                    </div>
                     <div class="console-keyboard-switch">
                         <svg viewBox="0 0 100 100" class="kb-switch-svg">
                             // White/gray background square
@@ -455,6 +471,12 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     disabled={!state.power_on}
                 >
                     {"LAMP TEST"}
+                </button>
+                <button
+                    class={classes!("help-btn", state.help_active.then_some("active"))}
+                    onclick={on_help_click}
+                >
+                    {"HELP"}
                 </button>
             </div>
         </div>

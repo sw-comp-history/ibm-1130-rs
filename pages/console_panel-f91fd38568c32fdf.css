@@ -444,6 +444,49 @@
   cursor: not-allowed;
 }
 
+/* Help button */
+.help-btn {
+  padding: 6px 12px;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #3a6ea5 0%, #2a4a75 100%);
+  border: 1px solid #4a7eb5;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.help-btn:hover {
+  background: linear-gradient(180deg, #4a8ec5 0%, #3a6a95 100%);
+}
+
+.help-btn.active {
+  background: linear-gradient(180deg, #5aaeE5 0%, #4a8ab5 100%);
+  box-shadow: 0 0 8px rgba(90, 174, 229, 0.5);
+}
+
+/* Power switch wrapper for help mode */
+.power-switch-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.power-switch-wrapper.help-blink {
+  animation: help-pulse 1s ease-in-out infinite;
+}
+
+@keyframes help-pulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 200, 50, 0.8));
+  }
+}
+
 /* Responsive */
 @media (max-width: 700px) {
   .console-top {
