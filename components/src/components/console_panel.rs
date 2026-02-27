@@ -430,9 +430,11 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 // Right side: Switches and control buttons
                 <div class="button-grid right-buttons">
                     // Row 1: Power switch and Console/Int Keyboard switch (white)
-                    <div class={classes!("power-switch-wrapper", state.help_active.then_some("help-blink"))}
-                         title={if state.help_active { "Click power to start." } else { "" }}>
+                    <div class={classes!("power-switch-wrapper", state.help_active.then_some("help-blink"))}>
                         <PowerSwitch is_on={state.power_on} on_toggle={on_power_toggle} />
+                        if state.help_active {
+                            <div class="help-tooltip">{"Click power to start."}</div>
+                        }
                     </div>
                     <div class="console-keyboard-switch">
                         <svg viewBox="0 0 100 100" class="kb-switch-svg">
