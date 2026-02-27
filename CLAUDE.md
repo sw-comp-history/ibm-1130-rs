@@ -15,8 +15,11 @@ The serve.sh script uses `basic-http-server` on port 9352. Do not change this.
 To preview changes:
 1. Run `./build-all.sh` to rebuild
 2. Run `./serve.sh` to start the server
-3. Navigate to http://localhost:9352/
+3. Navigate to http://localhost:9352/ibm-1130-rs/
 4. Use Playwright to take screenshots if needed
+
+The serve.sh script creates a symlink `ibm-1130-rs -> pages` to match
+the GitHub Pages URL structure (public_url="/ibm-1130-rs/" in Trunk.toml).
 
 ## Build Commands
 

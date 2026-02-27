@@ -91,7 +91,7 @@ The IBM 1130 is a word-addressed machine with:
 
 # Serve locally for preview (always uses port 9352)
 ./serve.sh
-# Then open http://localhost:9352/
+# Then open http://localhost:9352/ibm-1130-rs/
 
 # Run development server with hot reload (for active development)
 trunk serve
