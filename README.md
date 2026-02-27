@@ -86,11 +86,15 @@ The IBM 1130 is a word-addressed machine with:
 ### Development
 
 ```bash
-# Run development server with hot reload
-trunk serve
-
 # Build for production
-trunk build --release
+./build-all.sh
+
+# Serve locally for preview (always uses port 9352)
+./serve.sh
+# Then open http://localhost:9352/
+
+# Run development server with hot reload (for active development)
+trunk serve
 ```
 
 The production build outputs to `./pages/`.
