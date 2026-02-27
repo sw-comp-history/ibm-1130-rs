@@ -350,7 +350,7 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     value={state.switches}
                     on_change={on_switch_change}
                     label=""
-                    show_value_display={true}
+                    show_value_display={false}
                 />
             </div>
 
