@@ -90,16 +90,16 @@
   transform-origin: center;
 }
 
-/* Middle Section: Toggle Switches - compact, centered, narrower */
+/* Middle Section: Toggle Switches - wide gray background */
 .console-switches {
   background: #2a2a2a;
   border: 1px solid #3a3a3a;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 4px 24px;
   display: flex;
   justify-content: center;
   align-self: center;
-  width: 38%;
+  width: 70%;
   box-sizing: border-box;
   margin-top: 2px;
   margin-bottom: 2px;
@@ -109,7 +109,7 @@
   background: transparent;
   padding: 0;
   width: 100%;
-  transform: scale(0.8);
+  transform: scale(0.7);
   transform-origin: center;
 }
 
