@@ -4,21 +4,33 @@
 //! Integrated with tabbed interface for Keypunch, Printer, Assembler, and Console Panel
 
 use components::{
-    // Assembler game components
-    Header, LegendItem, Modal, ProgramArea, Register, RegisterPanel, Sidebar, SidebarButton,
-    WordMemoryViewer,
-    // Tab container
-    Tab, TabContainer, TabNav,
+    sample_assembler_listing,
     // Console panel components
-    ConsolePanel, Registers as ConsoleRegisters,
+    ConsolePanel,
+    Deck,
+    // Assembler game components
+    Header,
     // Keypunch component
-    Keypunch, Deck,
+    Keypunch,
+    LegendItem,
+    Modal,
     // Printer component
-    Printer, sample_assembler_listing,
+    Printer,
+    ProgramArea,
+    Register,
+    RegisterPanel,
+    Registers as ConsoleRegisters,
+    Sidebar,
+    SidebarButton,
+    // Tab container
+    Tab,
+    TabContainer,
+    TabNav,
+    WordMemoryViewer,
 };
 use yew::prelude::*;
 
-use crate::challenge::{Challenge, get_all_challenges};
+use crate::challenge::{get_all_challenges, Challenge};
 use crate::wasm::WasmCpu;
 
 #[function_component(App)]
@@ -100,9 +112,9 @@ pub fn app() -> Html {
                     if parts.len() >= 3
                         && let (Ok(addr), Ok(value)) =
                             (parts[1].parse::<u16>(), parts[2].parse::<u16>())
-                        {
-                            let _ = cpu_mut.write_memory(addr, value);
-                        }
+                    {
+                        let _ = cpu_mut.write_memory(addr, value);
+                    }
                 }
             }
 
@@ -329,12 +341,13 @@ pub fn app() -> Html {
 
             // Add initial data if present
             if !challenge.test_cases.is_empty()
-                && !challenge.test_cases[0].initial_memory.is_empty() {
-                    code.push_str("; Initial data:\n");
-                    for (addr, value) in &challenge.test_cases[0].initial_memory {
-                        code.push_str(&format!("DATA 0x{:02X} {}\n", addr, value));
-                    }
+                && !challenge.test_cases[0].initial_memory.is_empty()
+            {
+                code.push_str("; Initial data:\n");
+                for (addr, value) in &challenge.test_cases[0].initial_memory {
+                    code.push_str(&format!("DATA 0x{:02X} {}\n", addr, value));
                 }
+            }
 
             editor_code.set(code);
             current_challenge.set(Some(challenge.clone()));
@@ -366,11 +379,11 @@ pub fn app() -> Html {
 
                             // Save to localStorage
                             if let Some(window) = web_sys::window()
-                                && let Ok(Some(storage)) = window.local_storage() {
-                                    let key =
-                                        format!("ibm1130_challenge_{}", validation.challenge_id);
-                                    let _ = storage.set_item(&key, "completed");
-                                }
+                                && let Ok(Some(storage)) = window.local_storage()
+                            {
+                                let key = format!("ibm1130_challenge_{}", validation.challenge_id);
+                                let _ = storage.set_item(&key, "completed");
+                            }
                         } else {
                             let mut message = format!(
                                 "❌ Challenge {} did not pass.\n\n",
@@ -448,7 +461,9 @@ pub fn app() -> Html {
         let active_tab = active_tab.clone();
         Callback::from(move |_: MouseEvent| {
             // Convert deck cards to assembly source
-            let code: String = keypunch_deck.cards.iter()
+            let code: String = keypunch_deck
+                .cards
+                .iter()
                 .map(|card| card.to_text().trim_end().to_string())
                 .collect::<Vec<_>>()
                 .join("\n");
@@ -1117,6 +1132,9 @@ pub fn app() -> Html {
                 <div class="footer-left">
                     <span>{"MIT License"}</span>
                     <span>{"© 2026 Michael A Wright"}</span>
+                    <a href="https://software-wrighter-lab.github.io/" target="_blank">{"Blog"}</a>
+                    <a href="https://discord.com/invite/Ctzk5uHggZ" target="_blank">{"Discord"}</a>
+                    <a href="https://www.youtube.com/@SoftwareWrighter" target="_blank">{"YouTube"}</a>
                 </div>
                 <div class="footer-right">
                     <span>{format!("{} | {} | {}", env!("VERGEN_BUILD_HOST"), env!("VERGEN_GIT_SHA_SHORT"), env!("VERGEN_BUILD_TIMESTAMP"))}</span>
