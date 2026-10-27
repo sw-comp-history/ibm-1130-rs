@@ -121,6 +121,16 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
         Callback::from(move |e: KeyboardEvent| {
             let key = e.key();
 
+            // Characters and Backspace typed in the text input are handled by its
+            // oninput handler; punching them here too would duplicate every edit.
+            let from_text_input = e
+                .target()
+                .and_then(|t| t.dyn_into::<HtmlInputElement>().ok())
+                .is_some();
+            if from_text_input && (key.len() == 1 || key == "Backspace") {
+                return;
+            }
+
             // Handle special keys
             match key.as_str() {
                 "Enter" => {
@@ -285,7 +295,11 @@ pub fn keypunch(props: &KeypunchProps) -> Html {
     };
 
     // Get current card text for input display
-    let current_text = deck.current().to_text().trim_end().to_string();
+    // Trim trailing blanks, but keep any typed up to the cursor so spaces
+    // entered in the text input are not stripped on re-render.
+    let card_text = deck.current().to_text();
+    let text_len = card_text.trim_end().len().max(*current_column);
+    let current_text = card_text.chars().take(text_len).collect::<String>();
 
     html! {
         <div class="keypunch" tabindex="0" onkeydown={on_key_press}>
