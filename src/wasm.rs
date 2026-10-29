@@ -135,6 +135,13 @@ impl WasmCpu {
         self.cpu.iar()
     }
 
+    /// Set instruction address register (program counter)
+    pub fn set_iar(&mut self, addr: u16) -> Result<(), JsValue> {
+        self.cpu
+            .set_iar(addr)
+            .map_err(|e| JsValue::from_str(&e.to_string()))
+    }
+
     /// Get index register 1
     pub fn get_xr1(&self) -> u16 {
         self.cpu.read_xr1()

@@ -79,13 +79,10 @@ pub enum ConsoleAction {
     TogglePower,
     SetLampTest(bool),
     Load,
-    Deposit,
-    DepositNext,
-    Examine,
-    ExamineNext,
+    Store,
+    Display,
     Reset,
     ToggleRunning,
-    UpdateRegisters(Registers),
     ToggleHelp,
     SetHelpActive(bool),
 }
@@ -117,26 +114,20 @@ impl Reducible for ConsoleState {
                     new_state.registers.iar = new_state.switches;
                 }
             }
-            ConsoleAction::Deposit => {
-                if new_state.power_on {
-                    new_state.registers.sbr = new_state.switches;
-                }
-            }
-            ConsoleAction::DepositNext => {
-                if new_state.power_on {
-                    new_state.registers.iar = new_state.registers.iar.wrapping_add(1);
-                    new_state.registers.sbr = new_state.switches;
-                }
-            }
-            ConsoleAction::Examine => {
+            // LOAD mode PROG START: store the entry switches at IAR, advance IAR
+            ConsoleAction::Store => {
                 if new_state.power_on {
                     new_state.registers.sar = new_state.registers.iar;
+                    new_state.registers.sbr = new_state.switches;
+                    new_state.registers.iar = new_state.registers.iar.wrapping_add(1);
                 }
             }
-            ConsoleAction::ExamineNext => {
+            // DISP mode PROG START: address the word at IAR, advance IAR
+            // (the word itself comes from the connected emulator's memory)
+            ConsoleAction::Display => {
                 if new_state.power_on {
-                    new_state.registers.iar = new_state.registers.iar.wrapping_add(1);
                     new_state.registers.sar = new_state.registers.iar;
+                    new_state.registers.iar = new_state.registers.iar.wrapping_add(1);
                 }
             }
             ConsoleAction::Reset => {
@@ -147,9 +138,6 @@ impl Reducible for ConsoleState {
                 if new_state.power_on {
                     new_state.running = !new_state.running;
                 }
-            }
-            ConsoleAction::UpdateRegisters(regs) => {
-                new_state.registers = regs;
             }
             ConsoleAction::ToggleHelp => {
                 new_state.help_active = !new_state.help_active;
@@ -167,12 +155,17 @@ impl Reducible for ConsoleState {
 pub struct ConsolePanelProps {
     #[prop_or_default]
     pub on_state_change: Callback<ConsoleState>,
+    /// Registers from a connected emulator; when set they are displayed
+    /// instead of the panel's own registers
     #[prop_or_default]
     pub external_registers: Option<Registers>,
+    /// LOAD IAR pressed: entry switch value to load into IAR
     #[prop_or_default]
     pub on_load: Callback<u16>,
+    /// PROG START in LOAD mode: (address, word) to store in memory
     #[prop_or_default]
     pub on_deposit: Callback<(u16, u16)>,
+    /// PROG START in DISP mode: address of the word to display
     #[prop_or_default]
     pub on_examine: Callback<u16>,
     #[prop_or_default]
@@ -190,17 +183,7 @@ pub struct ConsolePanelProps {
 #[function_component(ConsolePanel)]
 pub fn console_panel(props: &ConsolePanelProps) -> Html {
     let state = use_reducer(ConsoleState::default);
-
-    {
-        let state = state.clone();
-        let external_registers = props.external_registers;
-        use_effect_with(external_registers, move |regs| {
-            if let Some(regs) = regs {
-                state.dispatch(ConsoleAction::UpdateRegisters(*regs));
-            }
-            || ()
-        });
-    }
+    let registers = props.external_registers.unwrap_or(state.registers);
 
     let on_switch_change = {
         let state = state.clone();
@@ -248,42 +231,6 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         })
     };
 
-    let _on_deposit = {
-        let state = state.clone();
-        let callback = props.on_deposit.clone();
-        Callback::from(move |_: MouseEvent| {
-            state.dispatch(ConsoleAction::Deposit);
-            callback.emit((state.registers.iar, state.switches));
-        })
-    };
-
-    let _on_deposit_next = {
-        let state = state.clone();
-        let callback = props.on_deposit.clone();
-        Callback::from(move |_: MouseEvent| {
-            state.dispatch(ConsoleAction::DepositNext);
-            callback.emit((state.registers.iar.wrapping_add(1), state.switches));
-        })
-    };
-
-    let on_examine = {
-        let state = state.clone();
-        let callback = props.on_examine.clone();
-        Callback::from(move |_: MouseEvent| {
-            state.dispatch(ConsoleAction::Examine);
-            callback.emit(state.registers.iar);
-        })
-    };
-
-    let _on_examine_next = {
-        let state = state.clone();
-        let callback = props.on_examine.clone();
-        Callback::from(move |_: MouseEvent| {
-            state.dispatch(ConsoleAction::ExamineNext);
-            callback.emit(state.registers.iar.wrapping_add(1));
-        })
-    };
-
     let on_reset = {
         let state = state.clone();
         let callback = props.on_reset.clone();
@@ -293,13 +240,26 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
         })
     };
 
+    // PROG START behavior depends on the mode switch
     let on_start = {
         let state = state.clone();
-        let callback = props.on_start_stop.clone();
-        Callback::from(move |_: MouseEvent| {
-            if !state.running {
-                state.dispatch(ConsoleAction::ToggleRunning);
-                callback.emit(true);
+        let on_start_stop = props.on_start_stop.clone();
+        let on_deposit = props.on_deposit.clone();
+        let on_examine = props.on_examine.clone();
+        Callback::from(move |_: MouseEvent| match state.speed_mode {
+            SpeedMode::Load => {
+                on_deposit.emit((registers.iar, state.switches));
+                state.dispatch(ConsoleAction::Store);
+            }
+            SpeedMode::Disp => {
+                on_examine.emit(registers.iar);
+                state.dispatch(ConsoleAction::Display);
+            }
+            _ => {
+                if !state.running {
+                    state.dispatch(ConsoleAction::ToggleRunning);
+                    on_start_stop.emit(true);
+                }
             }
         })
     };
@@ -325,12 +285,12 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 <div class="lights-panel">
                     // Left section: Register indicators (6 rows × 16)
                     <RegisterDisplay
-                        iar={state.registers.iar}
-                        sar={state.registers.sar}
-                        sbr={state.registers.sbr}
-                        afr={state.registers.afr}
-                        acc={state.registers.acc}
-                        ext={state.registers.ext}
+                        iar={registers.iar}
+                        sar={registers.sar}
+                        sbr={registers.sbr}
+                        afr={registers.afr}
+                        acc={registers.acc}
+                        ext={registers.ext}
                         lamp_test={state.lamp_test}
                         power_on={state.power_on}
                     />
@@ -353,7 +313,7 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                         power_on={state.power_on}
                     />
                 </div>
-                <div class="knob-panel">
+                <div class="knob-panel tip-below tip-slow" data-tip={TIP_MODE_SWITCH}>
                     <CircularKnob
                         position={state.speed_mode}
                         on_change={on_speed_change}
@@ -383,13 +343,15 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     </div>
                     // Row 2: Orange DISK UNLOCK, Dark Green FILE READY
                     <div class="status-light-row">
-                        <div class={classes!("status-light", "orange-light", (state.lamp_test || state.power_on).then_some("lit"))}>
+                        <div class={classes!("status-light", "orange-light", (state.lamp_test || state.power_on).then_some("lit"))}
+                            data-tip="DISK UNLOCK — the disk drive is stopped and its cartridge can be removed">
                             <div class="light-line" />
                             <span>{"DISK"}</span>
                             <span>{"UNLOCK"}</span>
                             <div class="light-line" />
                         </div>
-                        <div class={classes!("status-light", "darkgreen-light", (state.lamp_test).then_some("lit"))}>
+                        <div class={classes!("status-light", "darkgreen-light", (state.lamp_test).then_some("lit"))}
+                            data-tip="FILE READY — the disk drive is up to speed and ready for use">
                             <div class="light-line" />
                             <span>{"FILE"}</span>
                             <span>{"READY"}</span>
@@ -398,12 +360,14 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     </div>
                     // Row 3: Green RUN, Red PARITY CHECK
                     <div class="status-light-row">
-                        <div class={classes!("status-light", "green-light", (state.lamp_test || state.running).then_some("lit"))}>
+                        <div class={classes!("status-light", "green-light", (state.lamp_test || state.running).then_some("lit"))}
+                            data-tip="RUN — the processor is executing instructions">
                             <div class="light-line" />
                             <span>{"RUN"}</span>
                             <div class="light-line" />
                         </div>
-                        <div class={classes!("status-light", "red-light", (state.lamp_test).then_some("lit"))}>
+                        <div class={classes!("status-light", "red-light", (state.lamp_test).then_some("lit"))}
+                            data-tip="PARITY CHECK — a core storage parity error was detected">
                             <div class="light-line" />
                             <span>{"PARITY"}</span>
                             <span>{"CHECK"}</span>
@@ -412,13 +376,15 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                     </div>
                     // Row 4: Gray K.B. SELECT, Yellow FORMS CHECK
                     <div class="status-light-row">
-                        <div class={classes!("status-light", "gray-light", (state.lamp_test).then_some("lit"))}>
+                        <div class={classes!("status-light", "gray-light", (state.lamp_test).then_some("lit"))}
+                            data-tip="K.B. SELECT — the console keyboard is selected for input">
                             <div class="light-line" />
                             <span>{"K.B."}</span>
                             <span>{"SELECT"}</span>
                             <div class="light-line" />
                         </div>
-                        <div class={classes!("status-light", "yellow-light", (state.lamp_test).then_some("lit"))}>
+                        <div class={classes!("status-light", "yellow-light", (state.lamp_test).then_some("lit"))}
+                            data-tip="FORMS CHECK — the console printer is out of paper">
                             <div class="light-line" />
                             <span>{"FORMS"}</span>
                             <span>{"CHECK"}</span>
@@ -435,13 +401,15 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 // Right side: Switches and control buttons
                 <div class="button-grid right-buttons">
                     // Row 1: Power switch and Console/Int Keyboard switch (white)
-                    <div class={classes!("power-switch-wrapper", props.help_active.then_some("help-blink"))}>
+                    <div class={classes!("power-switch-wrapper", "tip-slow", props.help_active.then_some("help-blink"))}
+                        data-tip={(!props.help_active).then_some("POWER — turn the system on or off")}>
                         <PowerSwitch is_on={state.power_on} on_toggle={on_power_toggle} />
                         if props.help_active {
                             <div class="help-tooltip">{"Click power to start."}</div>
                         }
                     </div>
-                    <div class="console-keyboard-switch">
+                    <div class="console-keyboard-switch tip-slow"
+                        data-tip="CONSOLE / KEYBOARD — choose whether programs read input from the console entry switches or the keyboard">
                         <svg viewBox="0 0 100 100" class="kb-switch-svg">
                             // White/gray background square
                             <rect x="5" y="5" width="90" height="90" rx="6" fill="#e0e0e0" stroke="#a0a0a0" stroke-width="2"/>
@@ -456,19 +424,20 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                         </svg>
                     </div>
                     // Row 2: PROGRAM START, IMM STOP
-                    <button class="console-btn green" onclick={on_start.clone()} disabled={button_disabled || state.running}>{"PROG START"}</button>
-                    <button class="console-btn red" onclick={on_stop.clone()} disabled={button_disabled}>{"IMM STOP"}</button>
+                    {console_button("PROG START", "green", TIP_PROG_START, Some(on_start), button_disabled || state.running)}
+                    {console_button("IMM STOP", "red", "IMMEDIATE STOP — stop at once, even in the middle of an instruction", Some(on_stop.clone()), button_disabled)}
                     // Row 3: PROGRAM STOP, RESET
-                    <button class="console-btn gray" onclick={on_stop.clone()} disabled={button_disabled || !state.running}>{"PROG STOP"}</button>
-                    <button class="console-btn blue" onclick={on_reset.clone()} disabled={button_disabled}>{"RESET"}</button>
+                    {console_button("PROG STOP", "gray", "PROGRAM STOP — stop at the end of the current instruction", Some(on_stop), button_disabled || !state.running)}
+                    {console_button("RESET", "blue", "RESET — clear the registers and stop the processor", Some(on_reset), button_disabled)}
                     // Row 4: LOAD IAR, PROGRAM LOAD
-                    <button class="console-btn blue" onclick={on_load.clone()} disabled={button_disabled}>{"LOAD IAR"}</button>
-                    <button class="console-btn blue" onclick={on_examine.clone()} disabled={button_disabled}>{"PROG LOAD"}</button>
+                    {console_button("LOAD IAR", "blue", "LOAD IAR — copy the console entry switches into the Instruction Address Register", Some(on_load), button_disabled)}
+                    {console_button("PROG LOAD", "blue", "PROGRAM LOAD — read a boot card from the card reader and start it (not yet emulated)", None, button_disabled)}
                 </div>
             </div>
 
             // Bottom Right: Lamp Test (CE Panel - hidden on real hardware)
-            <div class="lamp-test-section">
+            <div class="lamp-test-section tip-slow tip-right-edge"
+                data-tip="LAMP TEST — hold to light every lamp and check for burned-out bulbs">
                 <span class="lamp-test-label">{"CE PANEL"}</span>
                 <button
                     class="lamp-test-btn"
@@ -481,6 +450,29 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                 </button>
             </div>
         </div>
+    }
+}
+
+const TIP_MODE_SWITCH: &str = "MODE SWITCH — sets what PROG START does: SS, SMC and SI step; \
+INT RUN and RUN run; DISP shows and LOAD stores the word at IAR";
+
+const TIP_PROG_START: &str = "PROGRAM START — RUN: start the program at IAR. \
+LOAD: store the entry switches at IAR. DISP: show the word at IAR. \
+LOAD and DISP then advance IAR to the next word";
+
+/// Console push button. The tooltip goes on a wrapper because disabled
+/// buttons are drawn at reduced opacity, which would also fade the tooltip.
+fn console_button(
+    label: &'static str,
+    color: &'static str,
+    tip: &'static str,
+    onclick: Option<Callback<MouseEvent>>,
+    disabled: bool,
+) -> Html {
+    html! {
+        <span class="tip-holder tip-slow" data-tip={tip}>
+            <button class={classes!("console-btn", color)} {onclick} {disabled}>{label}</button>
+        </span>
     }
 }
 
@@ -566,6 +558,27 @@ mod tests {
         assert_eq!(regs.sar, 0);
         assert_eq!(regs.sbr, 0);
         assert_eq!(regs.afr, 0);
+    }
+
+    #[test]
+    fn test_store_advances_iar() {
+        let state = ConsoleState {
+            power_on: true,
+            switches: 0xC0DE,
+            registers: Registers {
+                iar: 0x0100,
+                ..Registers::default()
+            },
+            ..ConsoleState::default()
+        };
+        let state = std::rc::Rc::new(state).reduce(ConsoleAction::Store);
+        assert_eq!(state.registers.sar, 0x0100);
+        assert_eq!(state.registers.sbr, 0xC0DE);
+        assert_eq!(state.registers.iar, 0x0101);
+
+        let state = state.reduce(ConsoleAction::Display);
+        assert_eq!(state.registers.sar, 0x0101);
+        assert_eq!(state.registers.iar, 0x0102);
     }
 
     #[test]

@@ -79,6 +79,9 @@ pub fn app() -> Html {
     // Help button state (for Console panel)
     let help_active = use_state(|| false);
 
+    // Console storage address/buffer (SAR, SBR) from the last LOAD or DISP
+    let console_storage = use_state(|| (0u16, 0u16));
+
     // Keypunch deck state
     let keypunch_deck = use_state(Deck::default);
 
@@ -492,8 +495,8 @@ pub fn app() -> Html {
                 acc: state["acc"].as_u64().unwrap_or(0) as u16,
                 ext: state["ext"].as_u64().unwrap_or(0) as u16,
                 iar: state["iar"].as_u64().unwrap_or(0) as u16,
-                sar: 0, // SAR not exposed in current CPU model
-                sbr: 0, // SBR not exposed in current CPU model
+                sar: console_storage.0,
+                sbr: console_storage.1,
                 afr: 0, // AFR not exposed in current CPU model
             }
         } else {
@@ -733,12 +736,64 @@ pub fn app() -> Html {
                 help_active.set(false);
             })
         };
+        // Console front panel operations on the shared CPU memory. Addresses
+        // wrap at the 4K-word memory size, as on a minimum 1130.
+        let wrap = |addr: u16| addr % crate::cpu::MEMORY_SIZE as u16;
+        let on_console_load_iar = {
+            let cpu = cpu.clone();
+            Callback::from(move |switches: u16| {
+                let mut cpu_mut = (*cpu).clone();
+                let _ = cpu_mut.set_iar(wrap(switches));
+                cpu.set(cpu_mut);
+            })
+        };
+        let on_console_store = {
+            let cpu = cpu.clone();
+            let console_storage = console_storage.clone();
+            let changed_memory = changed_memory.clone();
+            Callback::from(move |(addr, word): (u16, u16)| {
+                let addr = wrap(addr);
+                let mut cpu_mut = (*cpu).clone();
+                let _ = cpu_mut.write_memory(addr, word);
+                let _ = cpu_mut.set_iar(wrap(addr.wrapping_add(1)));
+                cpu.set(cpu_mut);
+                console_storage.set((addr, word));
+                changed_memory.set(vec![addr as usize]);
+            })
+        };
+        let on_console_display = {
+            let cpu = cpu.clone();
+            let console_storage = console_storage.clone();
+            Callback::from(move |addr: u16| {
+                let addr = wrap(addr);
+                let mut cpu_mut = (*cpu).clone();
+                let word = cpu_mut.read_memory(addr).unwrap_or(0);
+                let _ = cpu_mut.set_iar(wrap(addr.wrapping_add(1)));
+                cpu.set(cpu_mut);
+                console_storage.set((addr, word));
+            })
+        };
+        let on_console_reset = {
+            let cpu = cpu.clone();
+            let console_storage = console_storage.clone();
+            Callback::from(move |_: ()| {
+                // Registers only; words stored from the console stay in memory
+                let mut cpu_mut = (*cpu).clone();
+                cpu_mut.reset();
+                cpu.set(cpu_mut);
+                console_storage.set((0, 0));
+            })
+        };
         html! {
             <div class="console-tab">
                 <ConsolePanel
                     external_registers={Some(console_registers)}
                     help_active={help_is_active}
                     on_power_click={on_power_click}
+                    on_load={on_console_load_iar}
+                    on_deposit={on_console_store}
+                    on_examine={on_console_display}
+                    on_reset={on_console_reset}
                 />
             </div>
         }

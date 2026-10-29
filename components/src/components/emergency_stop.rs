@@ -12,7 +12,7 @@ pub struct EmergencyStopProps {}
 #[function_component(EmergencyStop)]
 pub fn emergency_stop(_props: &EmergencyStopProps) -> Html {
     html! {
-        <div class="emergency-stop-panel">
+        <div class="emergency-stop-panel tip-below" data-tip="EMERGENCY PULL SWITCH — cuts all power to the system (decorative)">
             <div class="emergency-stop-knob">
                 <span class="emergency-text">{"EMERGENCY"}</span>
                 <span class="stop-text">{"STOP"}</span>

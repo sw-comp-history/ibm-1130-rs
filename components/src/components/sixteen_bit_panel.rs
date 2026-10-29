@@ -126,8 +126,13 @@ pub fn sixteen_bit_panel(props: &SixteenBitPanelProps) -> Html {
                                             toggle_bit.emit(bit_position);
                                         });
 
+                                        let tip = format!(
+                                            "Console entry switch {bit_position} — bit value 0x{:04X}",
+                                            1u16 << (15 - bit_position)
+                                        );
+
                                         html! {
-                                            <div class="switch-with-label">
+                                            <div class="switch-with-label tip-slow" data-tip={tip}>
                                                 <div class="switch-number">{bit_position}</div>
                                                 <ToggleSwitch
                                                     value={weight}
