@@ -842,6 +842,8 @@ pub fn app() -> Html {
                         {match (*current_challenge).as_ref() {
                             Some(challenge) if *hints_open && !challenge.hints.is_empty() => html! {
                                 <div class="hint-panel">
+                                    <div class="hint-panel-title">{&challenge.title}</div>
+                                    <div class="hint-panel-description">{&challenge.description}</div>
                                     <div class="hint-panel-title">{"💡 Hints"}</div>
                                     <ul>
                                         {for challenge.hints.iter().map(|hint| html! { <li>{hint}</li> })}

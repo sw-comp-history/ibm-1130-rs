@@ -669,12 +669,21 @@ table td {
     margin-bottom: 8px;
     color: #ccc;
     font-size: 0.9em;
+    /* Leave room for the editor below; scroll long descriptions */
+    flex-shrink: 0;
+    max-height: 40%;
+    overflow-y: auto;
 }
 
 .hint-panel-title {
     color: #00d9ff;
     font-weight: bold;
     margin-bottom: 4px;
+}
+
+.hint-panel-description {
+    white-space: pre-line;
+    margin-bottom: 8px;
 }
 
 .hint-panel ul {
