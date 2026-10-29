@@ -55,6 +55,9 @@ pub struct ConsoleState {
     pub lamp_test: bool,
     pub running: bool,
     pub help_active: bool,
+    /// CONSOLE / KEYBOARD switch: true when up (CON, programs read the
+    /// console entry switches), false when down (INT, the keyboard)
+    pub console_entry: bool,
 }
 
 impl Default for ConsoleState {
@@ -68,6 +71,7 @@ impl Default for ConsoleState {
             lamp_test: false,
             running: false,
             help_active: false,
+            console_entry: false,
         }
     }
 }
@@ -85,6 +89,7 @@ pub enum ConsoleAction {
     ToggleRunning,
     ToggleHelp,
     SetHelpActive(bool),
+    ToggleConsoleEntry,
 }
 
 impl Reducible for ConsoleState {
@@ -144,6 +149,9 @@ impl Reducible for ConsoleState {
             }
             ConsoleAction::SetHelpActive(active) => {
                 new_state.help_active = active;
+            }
+            ConsoleAction::ToggleConsoleEntry => {
+                new_state.console_entry = !new_state.console_entry;
             }
         }
 
@@ -206,6 +214,22 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
             state.dispatch(ConsoleAction::TogglePower);
             on_power_click.emit(());
         })
+    };
+
+    let on_console_entry_toggle = {
+        let state = state.clone();
+        Callback::from(move |_: MouseEvent| {
+            state.dispatch(ConsoleAction::ToggleConsoleEntry);
+        })
+    };
+
+    // CONSOLE / KEYBOARD switch: the white toggle bar sits in the half
+    // the switch is set to, with the dark handle in the other half
+    let (kb_handle_y, kb_bar_y) = if state.console_entry { (47, 7) } else { (15, 55) };
+    let (con_fill, int_fill) = if state.console_entry {
+        ("#2d3748", "#a0aec0")
+    } else {
+        ("#a0aec0", "#2d3748")
     };
 
     let on_lamp_test_press = {
@@ -409,18 +433,22 @@ pub fn console_panel(props: &ConsolePanelProps) -> Html {
                         }
                     </div>
                     <div class="console-keyboard-switch tip-slow"
-                        data-tip="CONSOLE / KEYBOARD — choose whether programs read input from the console entry switches or the keyboard">
+                        data-tip={format!(
+                            "CONSOLE / KEYBOARD — choose whether programs read input from the console entry switches (CON, up) or the keyboard (INT, down). Set to {}.",
+                            if state.console_entry { "CON" } else { "INT" }
+                        )}
+                        onclick={on_console_entry_toggle}>
                         <svg viewBox="0 0 100 100" class="kb-switch-svg">
                             // White/gray background square
                             <rect x="5" y="5" width="90" height="90" rx="6" fill="#e0e0e0" stroke="#a0a0a0" stroke-width="2"/>
                             // Dark vertical handle
-                            <rect x="38" y="15" width="24" height="38" rx="3" fill="#1a1a1a"/>
+                            <rect x="38" y={kb_handle_y.to_string()} width="24" height="38" rx="3" fill="#1a1a1a"/>
                             // White sliding toggle bar (up position = CONSOLE)
-                            <rect x="8" y="55" width="84" height="38" rx="4" fill="#f8f8f8" stroke="#c0c0c0" stroke-width="1"/>
-                            // CON text
-                            <text x="30" y="78" font-size="10" font-weight="bold" fill="#2d3748" font-family="Arial, sans-serif">{"CON"}</text>
-                            // INT text
-                            <text x="58" y="78" font-size="10" font-weight="bold" fill="#2d3748" font-family="Arial, sans-serif">{"INT"}</text>
+                            <rect x="8" y={kb_bar_y.to_string()} width="84" height="38" rx="4" fill="#f8f8f8" stroke="#c0c0c0" stroke-width="1"/>
+                            // CON text (dark when selected)
+                            <text x="30" y={(kb_bar_y + 23).to_string()} font-size="10" font-weight="bold" fill={con_fill} font-family="Arial, sans-serif">{"CON"}</text>
+                            // INT text (dark when selected)
+                            <text x="58" y={(kb_bar_y + 23).to_string()} font-size="10" font-weight="bold" fill={int_fill} font-family="Arial, sans-serif">{"INT"}</text>
                         </svg>
                     </div>
                     // Row 2: PROGRAM START, IMM STOP
@@ -579,6 +607,16 @@ mod tests {
         let state = state.reduce(ConsoleAction::Display);
         assert_eq!(state.registers.sar, 0x0101);
         assert_eq!(state.registers.iar, 0x0102);
+    }
+
+    #[test]
+    fn test_console_entry_switch_toggles() {
+        let state = std::rc::Rc::new(ConsoleState::default());
+        assert!(!state.console_entry);
+        let state = state.reduce(ConsoleAction::ToggleConsoleEntry);
+        assert!(state.console_entry);
+        let state = state.reduce(ConsoleAction::ToggleConsoleEntry);
+        assert!(!state.console_entry);
     }
 
     #[test]

@@ -55,7 +55,8 @@ Assembler Game's **Memory (4K Words)** view, highlighted as changed.
   driven by the CPU. SAR and SBR show the last console LOAD/DISP operation,
   not CPU memory cycles.
 - **The status lamps** (DISK UNLOCK, FILE READY, PARITY CHECK, K.B. SELECT,
-  FORMS CHECK) and the CONSOLE/KEYBOARD switch are cosmetic.
+  FORMS CHECK) and the CONSOLE/KEYBOARD switch are cosmetic. The switch
+  flips between CON (up) and INT (down), but nothing reads it yet.
 
 ## Current design
 
