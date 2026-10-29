@@ -1,7 +1,7 @@
 // Toggle Switch Component
 //
-// An interactive toggle switch that can be clicked on the opposite side
-// to change its state. Provides visual affordance through hover effects.
+// An interactive toggle switch that flips when clicked anywhere on it.
+// Provides visual affordance through hover effects.
 // Ported from toggle-nixie React component.
 
 use yew::prelude::*;
@@ -30,50 +30,30 @@ pub struct ToggleSwitchProps {
 pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
     let hover_side = use_state(|| None::<HoverSide>);
 
-    let handle_click_top = {
+    // A click anywhere on the switch flips it. Only accepting clicks on the
+    // side opposite the knob left the knob itself unresponsive.
+    let handle_click = {
         let on_toggle = props.on_toggle.clone();
-        let is_on = props.is_on;
         let disabled = props.disabled;
         Callback::from(move |_: MouseEvent| {
-            // Only toggle if clicking on the opposite side (top when OFF)
-            if !disabled && !is_on {
+            if !disabled {
                 on_toggle.emit(());
             }
         })
     };
 
-    let handle_click_bottom = {
-        let on_toggle = props.on_toggle.clone();
-        let is_on = props.is_on;
-        let disabled = props.disabled;
-        Callback::from(move |_: MouseEvent| {
-            // Only toggle if clicking on the opposite side (bottom when ON)
-            if !disabled && is_on {
-                on_toggle.emit(());
-            }
-        })
-    };
-
-    let handle_mouse_enter_top = {
+    // While hovering, highlight the side the knob will move to
+    let handle_mouse_enter = {
         let hover_side = hover_side.clone();
         let is_on = props.is_on;
         let disabled = props.disabled;
         Callback::from(move |_: MouseEvent| {
-            // Only show hover effect on the clickable (opposite) side
-            if !disabled && !is_on {
-                hover_side.set(Some(HoverSide::Top));
-            }
-        })
-    };
-
-    let handle_mouse_enter_bottom = {
-        let hover_side = hover_side.clone();
-        let is_on = props.is_on;
-        let disabled = props.disabled;
-        Callback::from(move |_: MouseEvent| {
-            // Only show hover effect on the clickable (opposite) side
-            if !disabled && is_on {
-                hover_side.set(Some(HoverSide::Bottom));
+            if !disabled {
+                hover_side.set(Some(if is_on {
+                    HoverSide::Bottom
+                } else {
+                    HoverSide::Top
+                }));
             }
         })
     };
@@ -121,16 +101,7 @@ pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
     let on_fill = if props.is_on { "#fff" } else { "#666" };
     let off_fill = if props.is_on { "#666" } else { "#fff" };
 
-    let top_cursor = if !props.disabled && !props.is_on {
-        "pointer"
-    } else {
-        "default"
-    };
-    let bottom_cursor = if !props.disabled && props.is_on {
-        "pointer"
-    } else {
-        "default"
-    };
+    let cursor = if props.disabled { "default" } else { "pointer" };
 
     html! {
         <div class="toggle-container">
@@ -142,6 +113,10 @@ pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
                 class="toggle-switch"
                 aria-label={format!("Toggle switch for value {}, currently {}", props.value, if props.is_on { "on" } else { "off" })}
                 role="switch"
+                onclick={handle_click}
+                onmouseenter={handle_mouse_enter}
+                onmouseleave={handle_mouse_leave}
+                style={format!("cursor: {}", cursor)}
             >
                 // Switch background track (vertical)
                 <rect
@@ -153,7 +128,7 @@ pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
                     class={track_class}
                 />
 
-                // Top clickable area (visible when switch is OFF)
+                // Top hover highlight (shown when switch is OFF)
                 <rect
                     x="15"
                     y="10"
@@ -161,13 +136,9 @@ pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
                     height="50"
                     rx="15"
                     class={top_clickable_class}
-                    onclick={handle_click_top}
-                    onmouseenter={handle_mouse_enter_top.clone()}
-                    onmouseleave={handle_mouse_leave.clone()}
-                    style={format!("cursor: {}", top_cursor)}
                 />
 
-                // Bottom clickable area (visible when switch is ON)
+                // Bottom hover highlight (shown when switch is ON)
                 <rect
                     x="15"
                     y="60"
@@ -175,10 +146,6 @@ pub fn toggle_switch(props: &ToggleSwitchProps) -> Html {
                     height="50"
                     rx="15"
                     class={bottom_clickable_class}
-                    onclick={handle_click_bottom}
-                    onmouseenter={handle_mouse_enter_bottom}
-                    onmouseleave={handle_mouse_leave}
-                    style={format!("cursor: {}", bottom_cursor)}
                 />
 
                 // ON label (top)

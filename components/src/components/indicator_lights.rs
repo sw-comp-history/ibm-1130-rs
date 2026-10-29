@@ -241,7 +241,7 @@ mod tests {
         assert_eq!((value >> 15) & 1, 1);
 
         // Check LSB (bit 15)
-        assert_eq!((value >> 0) & 1, 1);
+        assert_eq!(value & 1, 1);
 
         // Check middle bit (bit 8)
         assert_eq!((value >> 7) & 1, 0);
