@@ -643,3 +643,45 @@ table td {
 .assembler-tab {
     display: contents;
 }
+
+/* Challenge hints: toggled from the challenge banner, shown above the editor */
+.hint-toggle-btn {
+    background: #0d47a1;
+    color: white;
+    border: 1px solid #64b5f6;
+    padding: 7px 12px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.hint-toggle-btn:hover {
+    background: #1976d2;
+}
+
+.hint-panel {
+    background: #1a2a3a;
+    border: 1px solid #00d9ff;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    color: #ccc;
+    font-size: 0.9em;
+}
+
+.hint-panel-title {
+    color: #00d9ff;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.hint-panel ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.hint-panel li {
+    margin: 3px 0;
+}

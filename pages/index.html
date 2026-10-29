@@ -6,7 +6,7 @@
     <title>IBM 1130 Assembly Game</title>
     
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="/ibm-1130-rs/asm-game-25afe163b0ae0b6e.css" integrity="sha384-yy3vjPZ1zTE/BayUJn3r8SnoqtJuUWV9A7/l/tSIwnWei+0vJnTL4MPFM6GnSqIV"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/asm-game-b0863b6bf30db1c5.css" integrity="sha384-3ACwnQUHg7FELRRtnEw/yRwLz4DtnV0iMAOh7ss2Q/82lVW/V2f0B2QBTShD1N6b"/>
     <link rel="stylesheet" href="/ibm-1130-rs/layout-e85a202394386a20.css" integrity="sha384-itlM77VCPI3JPAG81jT0+WzttkhyefQX3wPlLxonXySCZ7x0/1ErcUZFVpy/UgKV"/>
     <!-- Tab container and peripheral styles -->
     <link rel="stylesheet" href="/ibm-1130-rs/tab_container-b9076423f8d2511d.css" integrity="sha384-QrEmpciG4HKxCk9ZQnwM+EJXYcrODmoMouqJXRR+Y3ob4vRAOzoWEMxk2LRCHRN2"/>
@@ -19,11 +19,11 @@
     <link rel="stylesheet" href="/ibm-1130-rs/circular_knob-e38d85e24dee418e.css" integrity="sha384-HHbGrdCHxcjDdf5zuEEQs54ZcKPd8WZo+VbgEi4dY8kjM2afcnEJlE1DVUJngJhb"/>
     <link rel="stylesheet" href="/ibm-1130-rs/power_switch-d3fdc275b4c504da.css" integrity="sha384-LELUHwnZ3qYntS+gIp7Dtq+NR/M/zBdrlQdPqwhR9CXNrKAQL5jLFwpGnVCTjVfQ"/>
     <link rel="stylesheet" href="/ibm-1130-rs/lamp_test_button-3da317e2558d67c6.css" integrity="sha384-ApdSNnRdRq+B4Z2MjyCSfrDNPfQlkd8XmMgejxlfmhRXy3XtteU4Nse/yQGKxCOr"/>
-    <link rel="stylesheet" href="/ibm-1130-rs/console_panel-d6df5634b31a7a9c.css" integrity="sha384-jZ9lr8A2HbC64T5pzf+t4MxAZCSSFsG+tTQkjdFpyec2B/CeH5AfPKR4RCCjQ0u8"/>
+    <link rel="stylesheet" href="/ibm-1130-rs/console_panel-28779bf50b8f5b6b.css" integrity="sha384-VeNbQjSITmKGcecWxwuYzi4bmmtj1sJ4W4TwrdJzQhQ1kECeVacjrjNekZnvUyGB"/>
     
 <script type="module">
-import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-4f127c7ef0fac2b6.js';
-const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-4f127c7ef0fac2b6_bg.wasm' });
+import init, * as bindings from '/ibm-1130-rs/ibm-1130-emulator-349bde6874cd3d89.js';
+const wasm = await init({ module_or_path: '/ibm-1130-rs/ibm-1130-emulator-349bde6874cd3d89_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -32,7 +32,7 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
-<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-4f127c7ef0fac2b6.js" crossorigin="anonymous" integrity="sha384-NknNGUpEC+fNiNTU0yZDg+r4ckdwejVtrWyiNcK1Bmf0hdHsAol77cs/l+bOUl0Y"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-4f127c7ef0fac2b6_bg.wasm" crossorigin="anonymous" integrity="sha384-ylT0/GkeCCrvAlkDb8+GMfrvZueWI/S0mRrrjy8VXrDXNOKNHZVplQZe6ApU4Z2P" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="/ibm-1130-rs/ibm-1130-emulator-349bde6874cd3d89.js" crossorigin="anonymous" integrity="sha384-cccNb0ZmVJyyEPPpGDDNnnoHfH7RMGB2vZzMif8bzDovv1F1EBf0Q88RIntEOpOn"><link rel="preload" href="/ibm-1130-rs/ibm-1130-emulator-349bde6874cd3d89_bg.wasm" crossorigin="anonymous" integrity="sha384-5bly1DJgvVmxqKGChK0S39vIo6ixBxP64Jdo12JYw/KoErRncJoYsgMVXQifB73Y" as="fetch" type="application/wasm"></head>
 <body>
     <!-- Yew will mount the app here -->
 </body>

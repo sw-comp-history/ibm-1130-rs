@@ -553,3 +553,78 @@
     max-width: none;
   }
 }
+
+/* Hover tooltips - larger text for the small console labels.
+   Indicators show quickly; controls (.tip-slow) wait longer so that
+   operating a switch or button is not interrupted by a tooltip. */
+.console-panel [data-tip] {
+  position: relative;
+}
+
+.console-panel .tip-holder {
+  display: block;
+}
+
+.console-panel [data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 260px;
+  padding: 6px 10px;
+  background: #111;
+  color: #f0f0f0;
+  border: 1px solid #4a8ec5;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  font: normal 14px/1.35 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.1s, visibility 0s 0.1s;
+}
+
+.console-panel [data-tip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.15s 0.4s, visibility 0s 0.4s;
+}
+
+.console-panel .tip-slow[data-tip]:hover::after {
+  transition: opacity 0.15s 1.5s, visibility 0s 1.5s;
+}
+
+/* Hide while a control is being pressed */
+.console-panel [data-tip]:active::after {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+/* Elements at the top of the panel show their tooltip below */
+.console-panel .tip-below[data-tip]::after {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+/* Elements at the right edge align the tooltip to their right side */
+.console-panel .tip-right-edge[data-tip]::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* The switch panel is zoomed to 0.7; enlarge its tooltips to compensate */
+.console-panel .sixteen-bit-panel [data-tip]::after {
+  font-size: 20px;
+  padding: 8px 14px;
+  max-width: 370px;
+}

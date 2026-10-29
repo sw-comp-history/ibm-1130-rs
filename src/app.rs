@@ -71,6 +71,7 @@ pub fn app() -> Html {
 
     // Challenge state
     let current_challenge = use_state(|| None::<Challenge>);
+    let hints_open = use_state(|| false);
     let challenge_result = use_state(|| None::<Result<String, String>>);
 
     // Tab state
@@ -324,6 +325,7 @@ pub fn app() -> Html {
         let error_message = error_message.clone();
         let challenges_open = challenges_open.clone();
         let current_challenge = current_challenge.clone();
+        let hints_open = hints_open.clone();
 
         Callback::from(move |_: MouseEvent| {
             // Reset CPU
@@ -354,8 +356,14 @@ pub fn app() -> Html {
 
             editor_code.set(code);
             current_challenge.set(Some(challenge.clone()));
+            hints_open.set(false);
             challenges_open.set(false);
         })
+    };
+
+    let toggle_hints = {
+        let hints_open = hints_open.clone();
+        Callback::from(move |_: MouseEvent| hints_open.set(!*hints_open))
     };
 
     // Check solution callback
@@ -831,6 +839,17 @@ pub fn app() -> Html {
                     // Input Panel (scrollable)
                     <div class="input-panel">
                         <div class="panel-title">{"Program Editor"}</div>
+                        {match (*current_challenge).as_ref() {
+                            Some(challenge) if *hints_open && !challenge.hints.is_empty() => html! {
+                                <div class="hint-panel">
+                                    <div class="hint-panel-title">{"💡 Hints"}</div>
+                                    <ul>
+                                        {for challenge.hints.iter().map(|hint| html! { <li>{hint}</li> })}
+                                    </ul>
+                                </div>
+                            },
+                            _ => html! {},
+                        }}
                         <ProgramArea
                             initial_code={Some((*editor_code).clone())}
                             assembly_output={None}
@@ -912,6 +931,11 @@ pub fn app() -> Html {
                         <div class="challenge-info">
                             <strong>{&challenge.title}</strong>
                         </div>
+                        if !challenge.hints.is_empty() {
+                            <button class="hint-toggle-btn" onclick={toggle_hints.clone()}>
+                                {if *hints_open { "Hide Hints" } else { "💡 Hints" }}
+                            </button>
+                        }
                         <button class="check-solution-btn" onclick={check_solution}>
                             {"Check Solution"}
                         </button>
@@ -1023,7 +1047,8 @@ pub fn app() -> Html {
                             <p>{challenge.description.lines().next().unwrap_or("")}</p>
                             {if !challenge.hints.is_empty() {
                                 html! {
-                                    <details style="margin-top: 8px;">
+                                    // Toggling hints must not also select the challenge
+                                    <details style="margin-top: 8px;" onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}>
                                         <summary style="cursor: pointer; color: #00d9ff;">{"💡 Hints"}</summary>
                                         <ul style="margin: 5px 0; padding-left: 20px;">
                                             {for challenge.hints.iter().map(|hint| {
