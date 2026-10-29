@@ -23,7 +23,7 @@
   border-radius: 4px;
   padding: 4px;
   height: 24vh;
-  min-height: 140px;
+  min-height: 180px;  /* Smallest height that fits all six register rows */
   max-height: 200px;
 }
 
@@ -42,6 +42,21 @@
 .lights-panel > .indicator-display {
   flex: 3;
   min-width: 0;
+  gap: 2px;
+}
+
+/* Compact register rows so all six (with two-line labels) fit the panel
+   height instead of overflowing beneath the toggle switches */
+.lights-panel .indicator-row {
+  padding: 1px 8px;
+}
+
+.lights-panel .row-label {
+  line-height: 1;
+}
+
+.lights-panel .indicator {
+  min-height: 0;
 }
 
 /* Center black panel - square aspect ratio */
@@ -109,8 +124,9 @@
   background: transparent;
   padding: 0;
   width: 100%;
-  transform: scale(0.7);
-  transform-origin: center;
+  /* zoom (unlike transform) also shrinks the layout box, so the switch
+     background hugs the switches instead of reserving unscaled height */
+  zoom: 0.7;
 }
 
 .console-panel .sixteen-bit-panel .toggle-container {

@@ -80,6 +80,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  min-width: 60px;  /* Unscaled toggle SVG width, keeps switch spacing */
 }
 
 .switch-number {
@@ -95,17 +96,16 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Scale down the toggle switches to fit */
+/* Scale down the toggle switches to fit (zoom also shrinks layout height) */
 .switch-with-label .toggle-container {
-  transform: scale(0.55);
-  transform-origin: center top;
+  zoom: 0.55;
   margin: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1400px) {
   .switch-with-label .toggle-container {
-    transform: scale(0.48);
+    zoom: 0.48;
   }
 
   .switch-number {
@@ -115,7 +115,7 @@
 
 @media (max-width: 1024px) {
   .switch-with-label .toggle-container {
-    transform: scale(0.42);
+    zoom: 0.42;
   }
 
   .switch-number {
@@ -133,7 +133,7 @@
   }
 
   .switch-with-label .toggle-container {
-    transform: scale(0.4);
+    zoom: 0.4;
   }
 
   .switch-number {
