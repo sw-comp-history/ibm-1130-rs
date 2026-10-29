@@ -177,15 +177,15 @@ fn challenge_1_load_value() -> Challenge {
         id: 1,
         title: "Challenge 1: Load a Value".to_string(),
         description:
-            "Load the value 25 from memory address 0x0010 into the accumulator, then halt.\n\n\
+            "Load the value 25 from memory address 0x0020 into the accumulator, then halt.\n\n\
                      Use the LD instruction to load from memory.\n\
                      Remember to end with WAIT!\n\n\
-                     Hint: The value 25 is already stored at address 0x0010."
+                     Hint: The value 25 is already stored at address 0x0020."
                 .to_string(),
         difficulty: Difficulty::Beginner,
         test_cases: vec![TestCase {
             name: "ACC should contain 25".to_string(),
-            initial_memory: vec![(0x0010, 25)],
+            initial_memory: vec![(0x0020, 25)],
             expected_acc: Some(25),
             expected_memory: vec![],
             expected_xr1: None,
@@ -211,26 +211,26 @@ fn challenge_2_add_numbers() -> Challenge {
         id: 2,
         title: "Challenge 2: Add Two Numbers".to_string(),
         description: "Add two numbers from memory and store the result.\n\n\
-                     - Address 0x0010 contains 15\n\
-                     - Address 0x0011 contains 27\n\
-                     - Store the sum (42) at address 0x0012\n\n\
+                     - Address 0x0020 contains 15\n\
+                     - Address 0x0021 contains 27\n\
+                     - Store the sum (42) at address 0x0022\n\n\
                      Use LD to load, A to add, and STO to store."
             .to_string(),
         difficulty: Difficulty::Beginner,
         test_cases: vec![TestCase {
-            name: "Memory[0x0012] should contain 42 (15 + 27)".to_string(),
-            initial_memory: vec![(0x0010, 15), (0x0011, 27)],
+            name: "Memory[0x0022] should contain 42 (15 + 27)".to_string(),
+            initial_memory: vec![(0x0020, 15), (0x0021, 27)],
             expected_acc: None, // Don't care about final ACC value
-            expected_memory: vec![(0x0012, 42)],
+            expected_memory: vec![(0x0022, 42)],
             expected_xr1: None,
         }],
         max_cycles: Some(200),
         max_instructions: Some(20),
         hints: vec![
-            "First, load the value from 0x0010 into ACC".to_string(),
-            "Then, add the value from 0x0011 to ACC".to_string(),
-            "Finally, store ACC to 0x0012".to_string(),
-            "Example: LD 0 0x10, A 0 0x11, STO 0 0x12".to_string(),
+            "First, load the value from 0x0020 into ACC".to_string(),
+            "Then, add the value from 0x0021 to ACC".to_string(),
+            "Finally, store ACC to 0x0022".to_string(),
+            "Example: LD 0 0x20, A 0 0x21, STO 0 0x22".to_string(),
         ],
         learning_objectives: vec![
             "Chain multiple instructions together".to_string(),
@@ -279,111 +279,50 @@ fn challenge_3_use_index_register() -> Challenge {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::assembler::{Assembler, decode_instruction};
+    use crate::cpu::PROGRAM_START;
 
-    fn run_program(program: &str) -> Result<CpuState, String> {
-        use crate::assembler::Assembler;
-
+    /// Run a solution the way the app does: apply the challenge's initial
+    /// memory, load the program at PROGRAM_START, and execute until WAIT.
+    fn run_solution(challenge: &Challenge, program: &str) -> CpuState {
         let mut cpu = CpuState::new();
-        let mut assembler = Assembler::new();
+        for (addr, value) in &challenge.test_cases[0].initial_memory {
+            cpu.write_word(*addr, *value).unwrap();
+        }
 
-        let program = assembler
-            .assemble(program)
-            .map_err(|e| format!("Assembly error: {e}"))?;
+        let prog = Assembler::new().assemble(program).unwrap();
+        cpu.load_program(PROGRAM_START, &prog.code).unwrap();
 
-        cpu.load_program(4, &program.code)
-            .map_err(|e| format!("Load error: {e}"))?;
-
-        // Execute until WAIT or max iterations
-        let max_iterations = 10000;
-        for _ in 0..max_iterations {
+        let max_instructions = challenge.max_instructions.unwrap();
+        for _ in 0..max_instructions {
             if cpu.is_halted() {
                 break;
             }
-
-            let iar = cpu.iar();
-            let opcode = cpu.read_word(iar).map_err(|e| format!("Read error: {e}"))?;
-
-            let instr = crate::assembler::decode_instruction(opcode)
-                .map_err(|e| format!("Decode error: {e}"))?;
-
-            cpu.execute(&instr)
-                .map_err(|e| format!("Execute error: {e}"))?;
-
-            cpu.increment_iar().map_err(|e| format!("IAR error: {e}"))?;
+            let opcode = cpu.read_word(cpu.iar()).unwrap();
+            let instr = decode_instruction(opcode).unwrap();
+            cpu.execute(&instr).unwrap();
+            cpu.increment_iar().unwrap();
         }
+        assert!(cpu.is_halted(), "program did not halt");
 
-        Ok(cpu)
+        cpu
     }
 
     #[test]
     fn test_challenge_1_valid_solution() {
         let challenge = challenge_1_load_value();
-
-        // Set up initial memory as specified in test case
-        let mut cpu = CpuState::new();
-        for (addr, value) in &challenge.test_cases[0].initial_memory {
-            cpu.write_word(*addr, *value).unwrap();
-        }
-
-        // Run the solution
-        let program = "LD 0 0x10\nWAIT";
-        let mut cpu = run_program(program).unwrap();
-
-        // Apply initial memory again (since run_program creates new CPU)
-        for (addr, value) in &challenge.test_cases[0].initial_memory {
-            cpu.write_word(*addr, *value).unwrap();
-        }
-
-        // Actually run it properly
-        use crate::assembler::Assembler;
-        let mut assembler = Assembler::new();
-        let prog = assembler.assemble(program).unwrap();
-        cpu.load_program(4, &prog.code).unwrap();
-
-        // Execute
-        for _ in 0..10 {
-            if cpu.is_halted() {
-                break;
-            }
-            let iar = cpu.iar();
-            let opcode = cpu.read_word(iar).unwrap();
-            let instr = crate::assembler::decode_instruction(opcode).unwrap();
-            cpu.execute(&instr).unwrap();
-            cpu.increment_iar().unwrap();
-        }
+        let cpu = run_solution(&challenge, "LD 0 0x20\nWAIT");
 
         let result = challenge.validate_solution(&cpu).unwrap();
-        assert!(result.passed);
+        assert!(result.passed, "{:?}", result.test_results);
     }
 
     #[test]
     fn test_challenge_2_valid_solution() {
         let challenge = challenge_2_add_numbers();
-
-        let mut cpu = CpuState::new();
-        for (addr, value) in &challenge.test_cases[0].initial_memory {
-            cpu.write_word(*addr, *value).unwrap();
-        }
-
-        use crate::assembler::Assembler;
-        let mut assembler = Assembler::new();
-        let program = "LD 0 0x10\nA 0 0x11\nSTO 0 0x12\nWAIT";
-        let prog = assembler.assemble(program).unwrap();
-        cpu.load_program(4, &prog.code).unwrap();
-
-        // Execute
-        for _ in 0..20 {
-            if cpu.is_halted() {
-                break;
-            }
-            let iar = cpu.iar();
-            let opcode = cpu.read_word(iar).unwrap();
-            let instr = crate::assembler::decode_instruction(opcode).unwrap();
-            cpu.execute(&instr).unwrap();
-            cpu.increment_iar().unwrap();
-        }
+        let cpu = run_solution(&challenge, "LD 0 0x20\nA 0 0x21\nSTO 0 0x22\nWAIT");
 
         let result = challenge.validate_solution(&cpu).unwrap();
-        assert!(result.passed);
+        assert!(result.passed, "{:?}", result.test_results);
     }
 }

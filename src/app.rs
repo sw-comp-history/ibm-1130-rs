@@ -345,7 +345,7 @@ pub fn app() -> Html {
             {
                 code.push_str("; Initial data:\n");
                 for (addr, value) in &challenge.test_cases[0].initial_memory {
-                    code.push_str(&format!("DATA 0x{:02X} {}\n", addr, value));
+                    code.push_str(&format!("DATA {} {}\n", addr, value));
                 }
             }
 
